@@ -1,0 +1,46 @@
+<!-- Begin Preloader -->
+<div id="preloader">
+    <div class="canvas">
+        <img src="assets/img/logo.png" alt="logo" class="loader-logo">
+        <div class="spinner"></div>   
+    </div>
+</div>
+<!-- End Preloader -->
+<!-- Begin Container -->
+<div class="container-fluid h-100 overflow-y">
+    <div class="row flex-row h-100">
+        <div class="col-12 my-auto">
+            <div class="password-form mx-auto">
+                <div class="logo-centered">
+                    <a href="db-default.html">
+                        <img src="assets/img/logo.png" alt="logo">
+                    </a>
+                </div>
+                <h3>Mot de passe oublié ?</h3>
+                <form>
+                    <div class="group material-input">
+                        <input type="email" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>E-mail</label>
+                    </div>
+                </form>
+                <div class="button text-center">
+                    <a href="dashboard.html" class="btn btn-lg btn-gradient-01">
+                        Envoyer
+                    </a>
+                </div>
+                <div class="back">
+                    <a onclick="setForm('connexion');">Se connecter</a>
+                </div>
+            </div>        
+        </div>
+        <!-- End Col -->
+    </div>
+    <!-- End Row -->
+</div>  
+<!-- End Container -->
+<script>
+document.body.removeAttribute("class");
+document.body.setAttribute("class","bg-fixed-02");
+</script>
