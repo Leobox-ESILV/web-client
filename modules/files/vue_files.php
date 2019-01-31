@@ -83,11 +83,10 @@ class VueFiles extends VueGenerique {
                         <h4>Leobox <?php echo "> ".str_replace('/',' > ',$_SESSION['current_path_file']); ?></h4>
                     </div>
                     <div class="widget-body">
-                        <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
-                        <button type="file" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-cloud-upload"></i> Upload File</button>
                         <form id="upload_form" enctype="multipart/form-data" method="post">
-                            <input type="file" name="file1" id="file1"><br>
-                            <input type="button" value="Upload File" onclick="uploadFile()">
+                            <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
+                            <input type="file" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
+                            <button type="button"value="Upload File" onclick="uploadFile()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-cloud-upload"></i> Upload File</button>
                             <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
                             <h3 id="status"></h3>
                             <p id="loaded_n_total"></p>
@@ -232,16 +231,16 @@ class VueFiles extends VueGenerique {
 
             function uploadFile() {
                 var file = _("file1").files[0];
-                // alert(file.name+" | "+file.size+" | "+file.type);
+                //alert(file.name+" | "+file.size+" | "+file.type);
                 var formdata = new FormData();
                 formdata.append("file1", file);
+                formdata.append("action", "upload_file");
                 var ajax = new XMLHttpRequest();
                 ajax.upload.addEventListener("progress", progressHandler, false);
                 ajax.addEventListener("load", completeHandler, false);
                 ajax.addEventListener("error", errorHandler, false);
                 ajax.addEventListener("abort", abortHandler, false);
                 ajax.open("POST", "./modules/files/ajax_handle_files.php");
-                console.log(formdata);
                 ajax.send(formdata);
             }
 
@@ -253,15 +252,40 @@ class VueFiles extends VueGenerique {
             }
 
             function completeHandler(event) {
-                _("status").innerHTML = event.target.responseText;
+                var response = jQuery.parseJSON(event.target.responseText);
+                console.log(response);
+                if(response.is_status==200){
+                    Swal.fire({
+                        type: 'success',
+                        title: 'File successfully uploaded',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                }else{
+                    Swal.fire({
+                        type: 'error',
+                        title: response.comment,
+                    })
+                }
                 _("progressBar").value = 0;
             }
 
             function errorHandler(event) {
+                Swal.fire({
+                    type: 'error',
+                    title: "Upload Failed",
+                })
                 _("status").innerHTML = "Upload Failed";
             }
 
             function abortHandler(event) {
+                Swal.fire({
+                    type: 'error',
+                    title: "Upload Aborted",
+                })
                 _("status").innerHTML = "Upload Aborted";
             }
         </script>

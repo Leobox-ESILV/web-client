@@ -8,4 +8,12 @@ if(isset($_POST['action']) && $_POST['action']=="create_folder") {
     echo json_encode($result);
 }
 
+if(isset($_POST['action']) && $_POST['action']=="upload_file") {
+    $file = $_FILES['file1'];
+    $controleur = new ControleurFiles();
+    $result = $controleur->upload_file($file);
+    echo json_encode($result);
+}
+
+
 ?>

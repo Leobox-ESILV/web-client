@@ -10,12 +10,12 @@ class ModeleConnexion extends ModeleGenerique {
 		$this->vue = new VueConnexion();
 
 		$client = new GuzzleHttp\Client();
-		$res = $client->request('GET', 'http://leobox.org:8080/v1/user/login', [
+		$res = $client->request('GET', parent::$url_api.'user/login', [
 			'query' => ['username' => $email, 'password' => $mdp]
 		]);
 		$result = json_decode($res->getBody());
 		
-		if($result->is_status != 1){
+		if($result->is_status != 200){
 			$this->vue->error_message($result->comment);
 			$this->vue->redirectAccueil();
 		}else{
