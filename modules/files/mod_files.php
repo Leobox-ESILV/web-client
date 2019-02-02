@@ -1,9 +1,9 @@
 <?php
 
-require_once(dirname(__FILE__,3).'./include/modele_generique.php');
+require_once(dirname(__FILE__,3).'/include/modele_generique.php');
 
-require_once(dirname(__FILE__,3)."./modules/files/controleur_files.php");
-require_once(dirname(__FILE__,3)."./modules/files/vue_files.php");
+require_once(dirname(__FILE__,3)."/modules/files/controleur_files.php");
+require_once(dirname(__FILE__,3)."/modules/files/vue_files.php");
 
 
 class ModFiles extends ModuleGenerique {

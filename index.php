@@ -19,7 +19,7 @@ date_default_timezone_set('Europe/Paris');
 	if (isset($_GET['module'])) {
 	    $nom_module = htmlspecialchars($_GET['module']);
 	} else {
-	    $nom_module = "home";
+	    $nom_module = "connexion";
 	}
 
 	switch ($nom_module) {
@@ -49,8 +49,8 @@ date_default_timezone_set('Europe/Paris');
 	$module = new $nom_classe_module;
 	$module->getControleur()->getVue()->tamponVersContenu();
 
-	if($nom_module == "home"){
-		require_once './template_home.php';
+	if($nom_module == "connexion"){
+		require_once './template_connexion.php';
 	}else{
 		require_once './template.php';
 	}

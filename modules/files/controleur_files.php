@@ -1,8 +1,8 @@
 <?php
 
-require_once (dirname(__FILE__,3)."./modules/files/modele_files.php");
-require_once (dirname(__FILE__,3)."./modules/files/vue_files.php");
-require_once (dirname(__FILE__,3)."./include/controleur_generique.php");
+require_once (dirname(__FILE__,3)."/modules/files/modele_files.php");
+require_once (dirname(__FILE__,3)."/modules/files/vue_files.php");
+require_once (dirname(__FILE__,3)."/include/controleur_generique.php");
 
 class ControleurFiles extends ControleurGenerique {
 

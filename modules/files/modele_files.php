@@ -1,22 +1,22 @@
 <?php
 
-require_once(dirname(__FILE__,3).'./include/modele_generique.php');
-require_once(dirname(__FILE__,3).'./vendor/autoload.php');
+require_once(dirname(__FILE__,3).'/include/modele_generique.php');
+require_once(dirname(__FILE__,3).'/vendor/autoload.php');
 
 class ModeleFiles extends ModeleGenerique {
 
     function set_mime_type($mime_type){
-        if(strpos($mime_type,'image')){
-            $value = 'la-file-image-o';
-        }else if(strpos($mime_type,'directory')){
+        if(strstr($mime_type,'image/')){
+            $value = 'la-file-photo-o';
+        }else if(strstr($mime_type,'directory')){
             $value = 'la-folder-o';
-        }else if(strpos($mime_type,'pdf')){
+        }else if(strstr($mime_type,'pdf')){
             $value = 'la-file-pdf-o';
-        }else if(strpos($mime_type,'audio')){
+        }else if(strstr($mime_type,'audio')){
             $value = 'la-file-sound-o';
-        }else if(strpos($mime_type,'video')){
+        }else if(strstr($mime_type,'video')){
             $value = 'la-file-video-o';
-        }else if(strpos($mime_type,'compressed') || strpos($mime_type,'zip')){
+        }else if(strstr($mime_type,'compressed') || strstr($mime_type,'zip')){
             $value = 'la-file-zip-o';
         }else{
             $value = 'la-file-code-o';
@@ -45,7 +45,11 @@ class ModeleFiles extends ModeleGenerique {
         $this->modele = new ModeleFiles();
         if(isset($array['path_file'])){
             if( $array['path_file'] == $find ) {
-                return $array['sub_dir'];
+                if(isset($array['sub_dir'])){
+                    return $array['sub_dir'];
+                }else{
+                    return '';
+                }
             }
         }
     

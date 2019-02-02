@@ -1,7 +1,7 @@
 <?php
 
-require_once("modele_connexion.php");
-require_once("vue_connexion.php");
+require_once("./modules/connexion/modele_connexion.php");
+require_once("./modules/connexion/vue_connexion.php");
 
 class ControleurConnexion extends ControleurGenerique {
 
@@ -12,6 +12,16 @@ class ControleurConnexion extends ControleurGenerique {
 		$mdp=$_POST['motdepasse'];
 		$this->modele->connecter($email,$mdp);
 	}
+
+	function afficheConnexion() {
+        $this->vue = new VueConnexion();
+        $this->modele = new ModeleConnexion();
+        $this->vue->connexion();
+    }
+
+	function getVue() {
+        return $this->vue;
+    }
 }
 
 ?>

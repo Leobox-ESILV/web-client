@@ -1,6 +1,7 @@
 <?php
 
 require_once('./include/modele_generique.php');
+require_once("./modules/connexion/vue_connexion.php");
 require_once('./vendor/autoload.php');
 
 class ModeleConnexion extends ModeleGenerique {

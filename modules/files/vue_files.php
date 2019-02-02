@@ -1,7 +1,7 @@
 <?php
 
-require_once (dirname(__FILE__,3)."./modules/files/modele_files.php");
-require_once (dirname(__FILE__,3)."./include/vue_generique.php");
+require_once (dirname(__FILE__,3)."/modules/files/modele_files.php");
+require_once (dirname(__FILE__,3)."/include/vue_generique.php");
 
 class VueFiles extends VueGenerique {
 
@@ -85,78 +85,83 @@ class VueFiles extends VueGenerique {
                     <div class="widget-body">
                         <form id="upload_form" enctype="multipart/form-data" method="post">
                             <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
-                            <input type="file" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
-                            <button type="button"value="Upload File" onclick="uploadFile()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-cloud-upload"></i> Upload File</button>
-                            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
-                            <h3 id="status"></h3>
+                            <button type="button" value="Upload File" onclick="document.getElementById('file1').click()" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-cloud-upload"></i> Upload File</button>
+                            <input type="file" style="display:none" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
+                            <div id="upload_file_name" style="display:none" class="alert alert-outline-primary dotted" role="alert">
+                                <strong></strong> wait uploading......
+                            </div>
+                            <div class="progress progress-lg mb-3" id="div_upload_bar" style="display:none">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="upload_bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
                             <p id="loaded_n_total"></p>
                         </form>
-                        <div class="table-responsive">
-                            <table id="files-table" class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-harddrives"></i>Size</th>
-                                        <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-layout-tab"></i>Type</th>
-                                        <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-timer"></i>Modification</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                    $this->modele = new ModeleFiles();
-                                    foreach ($listFiles as $info) {
-                                    ?>
-                                    <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>')">
-                                        <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
-                                        <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
-                                        <td><?php echo explode(',',$info['type'])[0]; ?></td>
-                                        <td><?php echo date('d/m/Y H:i', $info['storage_mtime']); ?></td>
-                                        <td id="td_actions">
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-secondary"><i class="la la-share"></i>Share</button>
-                                                <a class="btn btn-secondary dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="la la-angle-down mr-0"></i>
-                                                </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Download</a>
-                                                    <a class="dropdown-item" href="#">Delete</a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item" href="#">Version History</a>
-                                                </div>
+                        <?php
+                        if (empty($listFiles)) {
+                        ?>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                <div class="widget widget-17 has-shadow">
+                                    <div class="widget-body">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center">
+                                                <div class="counter">You have nothing yet in this space</div>
+                                                <div class="total-visitors">Use the buttons above to create folder or upload file (drag and drop also works)</div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <?php
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php
+                        }else{
+                        ?>
+                            <div class="table-responsive">
+                                <table id="files-table" class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-harddrives"></i>Size</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-layout-tab"></i>Type</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-timer"></i>Modification</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php 
+                                        $this->modele = new ModeleFiles();
+                                        foreach ($listFiles as $info) {
+                                        ?>
+                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>')">
+                                            <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
+                                            <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
+                                            <td><?php echo explode(',',$info['type'])[0]; ?></td>
+                                            <td><?php echo date('d/m/Y H:i', $info['storage_mtime']); ?></td>
+                                            <td id="td_actions">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-secondary"><i class="la la-share"></i>Share</button>
+                                                    <a class="btn btn-secondary dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="la la-angle-down mr-0"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">Download</a>
+                                                        <a class="dropdown-item" href="#">Delete</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item" href="#">Version History</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
             <!-- End Widget 20 -->
-        </div>
-        <!-- End Row -->
-        <!-- Begin Row -->
-        <div class="row flex-row">
-            <!-- Begin Widget 23 -->
-            <div class="col-xl-4">
-                <div class="widget widget-23 bg-gradient-02 d-flex justify-content-center align-items-center">
-                    <div class="widget-body text-center">
-                        <i class="ti ti-zip"></i>
-                        <div class="title">Archive Title</div>
-                        <div class="number">Download Archive</div>
-                        <div class="text-center mt-3 mb-3">
-                            <button type="button" class="btn btn-outline-light">
-                                Download
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Widget 23 -->
         </div>
         <!-- End Row -->
         </div>
@@ -167,6 +172,10 @@ class VueFiles extends VueGenerique {
                 $('#files-table').DataTable({
                     "paging": false,
                     "searching": false
+                });
+
+                $("#file1").change(function() {
+                    uploadFile();
                 });
             });
 
@@ -236,6 +245,9 @@ class VueFiles extends VueGenerique {
                 formdata.append("file1", file);
                 formdata.append("action", "upload_file");
                 var ajax = new XMLHttpRequest();
+                $('#div_upload_bar').css("display", "block");
+                $('#upload_file_name').css("display", "inline-block");
+                $('#upload_file_name strong').text(file.name);
                 ajax.upload.addEventListener("progress", progressHandler, false);
                 ajax.addEventListener("load", completeHandler, false);
                 ajax.addEventListener("error", errorHandler, false);
@@ -244,11 +256,23 @@ class VueFiles extends VueGenerique {
                 ajax.send(formdata);
             }
 
+            function formatBytes(bytes,decimals) {
+                if(bytes == 0) return '0 Bytes';
+                var k = 1024,
+                    dm = decimals <= 0 ? 0 : decimals || 2,
+                    sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+                    i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+
             function progressHandler(event) {
-                _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+                _("loaded_n_total").innerHTML = "Uploaded " + formatBytes(event.loaded) + "/" + formatBytes(event.total);
                 var percent = (event.loaded / event.total) * 100;
-                _("progressBar").value = Math.round(percent);
-                _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+                //_("progressBar").value = Math.round(percent);
+                var actuel_percent = Math.round(percent)+"%";
+                $('#upload_bar').css("width", actuel_percent);
+                $('#upload_bar').text(actuel_percent);
             }
 
             function completeHandler(event) {
@@ -270,7 +294,8 @@ class VueFiles extends VueGenerique {
                         title: response.comment,
                     })
                 }
-                _("progressBar").value = 0;
+                $('#upload_bar').css("width", "0%");
+                $('#upload_bar').text("0%");
             }
 
             function errorHandler(event) {
@@ -278,7 +303,6 @@ class VueFiles extends VueGenerique {
                     type: 'error',
                     title: "Upload Failed",
                 })
-                _("status").innerHTML = "Upload Failed";
             }
 
             function abortHandler(event) {
@@ -286,7 +310,6 @@ class VueFiles extends VueGenerique {
                     type: 'error',
                     title: "Upload Aborted",
                 })
-                _("status").innerHTML = "Upload Aborted";
             }
         </script>
     	<?php 

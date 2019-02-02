@@ -22,6 +22,7 @@
         <!-- Stylesheet -->
         <link rel="stylesheet" href="assets/vendors/css/base/bootstrap.min.css">
         <link rel="stylesheet" href="assets/vendors/css/base/elisyam-1.5.min.css">
+        <link rel="stylesheet" href="assets/sweetalert2/sweetalert2.min.css">
         <link rel="stylesheet" href="lib/home/css/style.css">
     </head>
     <body>
@@ -36,6 +37,7 @@
         <!-- Begin Page Vendor Js -->
         <!-- <script src="assets/vendors/js/app/app.min.js"></script> -->
 		<!-- End Page Vendor Js -->
+        <script src="assets/sweetalert2/sweetalert2.all.min.js"></script>
 		<script >
 			function setForm(page_name){
                 $('#home_form').load("templates/home/"+page_name+".html", function() {

@@ -1,9 +1,15 @@
+<!DOCTYPE html>
 <?php
 
-require_once("mod_connexion.php");
-require_once("controleur_connexion.php");
-
 class VueConnexion extends VueGenerique {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function connexion() {
+      
+    }
 
     function error_message($message){
     	echo '<script language="javascript">';
