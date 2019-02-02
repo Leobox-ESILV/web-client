@@ -45,8 +45,8 @@ class ModeleFiles extends ModeleGenerique {
         $this->modele = new ModeleFiles();
         if(isset($array['path_file'])){
             if( $array['path_file'] == $find ) {
-                if(isset($array['sub_dir'])){
-                    return $array['sub_dir'];
+                if(isset($array)){
+                    return $array;
                 }else{
                     return '';
                 }

@@ -96,7 +96,7 @@ class VueFiles extends VueGenerique {
                             <p id="loaded_n_total"></p>
                         </form>
                         <?php
-                        if (empty($listFiles)) {
+                        if (empty($listFiles['sub_dir'])) {
                         ?>
                             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                                 <div class="widget widget-17 has-shadow">
@@ -127,9 +127,9 @@ class VueFiles extends VueGenerique {
                                     <tbody>
                                         <?php 
                                         $this->modele = new ModeleFiles();
-                                        foreach ($listFiles as $info) {
+                                        foreach ($listFiles['sub_dir'] as $info) {
                                         ?>
-                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>')">
+                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>','<?php echo $info['type']; ?>','<?php echo $info['id']; ?>')">
                                             <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
                                             <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
                                             <td><?php echo explode(',',$info['type'])[0]; ?></td>
@@ -141,10 +141,10 @@ class VueFiles extends VueGenerique {
                                                         <i class="la la-angle-down mr-0"></i>
                                                     </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">Download</a>
-                                                        <a class="dropdown-item" href="#">Delete</a>
+                                                        <a class="dropdown-item" href="#"><i class="la la-download"></i> Download</a>
+                                                        <a class="dropdown-item" href="#"><i class="la la-remove"></i> Delete</a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item" href="#">Version History</a>
+                                                        <a class="dropdown-item" href="#"><i class="la la-history"></i> Version History</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -179,8 +179,12 @@ class VueFiles extends VueGenerique {
                 });
             });
 
-            function click_on_files(path_file){
-                window.open("index.php?module=files&dir="+path_file,"_self");
+            function click_on_files(path_file,type,id){
+                if(type=="Folder"){
+                    window.open("index.php?module=files&open="+path_file,"_self");
+                }else{
+                    
+                }
             }
             
             function create_folder(){
@@ -277,7 +281,6 @@ class VueFiles extends VueGenerique {
 
             function completeHandler(event) {
                 var response = jQuery.parseJSON(event.target.responseText);
-                console.log(response);
                 if(response.is_status==200){
                     Swal.fire({
                         type: 'success',

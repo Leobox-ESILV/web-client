@@ -19,13 +19,13 @@ class ModFiles extends ModuleGenerique {
         print_r($list_dir);
         echo "</pre>"; */
    
-        if(isset($_GET['dir'])){
-            $_SESSION['current_path_file'] = $_GET['dir'];
-            $new_list_dir = $this->modele->find_path_tree($_GET['dir'],$list_dir);
+        if(isset($_GET['open'])){
+            $_SESSION['current_path_file'] = $_GET['open'];
+            $new_list_dir = $this->modele->find_path_tree($_GET['open'],$list_dir);
             $this->controleur->affiche_files($new_list_dir);
         }else{
             $_SESSION['current_path_file'] = "/";
-            $this->controleur->affiche_files($list_dir['sub_dir']);
+            $this->controleur->affiche_files($list_dir);
         }
     }
 
