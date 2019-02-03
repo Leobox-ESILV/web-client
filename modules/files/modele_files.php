@@ -123,6 +123,30 @@ class ModeleFiles extends ModeleGenerique {
         return $result;
     }
 
+    function get_upload_folder($file,$folder_source){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $path_file = $_SESSION['current_path_file'].'/'.$folder_source;
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('POST', $modeleGene->getUrlApi()."file/".$username."/upload", [
+            'query' => ['path_file' => $path_file],
+			'headers' => [
+                'ApiKeyUser' => $user_token
+            ],
+            'multipart' => [
+                [
+                    'name'     => 'file',
+                    'contents' => fopen($file['tmp_name'], 'r'),
+                    'filename' => $file['name']
+                ]
+            ]
+        ]);
+        $result = json_decode($res->getBody(), true);
+        return $result;
+    }
+
 }
 
 

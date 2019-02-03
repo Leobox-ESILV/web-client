@@ -85,8 +85,13 @@ class VueFiles extends VueGenerique {
                     <div class="widget-body">
                         <form id="upload_form" enctype="multipart/form-data" method="post">
                             <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
-                            <button type="button" value="Upload File" onclick="document.getElementById('file1').click()" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-cloud-upload"></i> Upload File</button>
+                            
+                            <button type="button" value="Upload File" onclick="document.getElementById('file1').click()" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-file"></i> Upload File</button>
                             <input type="file" style="display:none" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
+                            
+                            <button type="button" value="Upload Folder" onclick="document.getElementById('folder1').click()" class="btn btn-gradient-04 mr-1 mb-2"><i class="la la-folder-open"></i> Upload Folder</button>
+                            <input type="file" style="display:none" name="files[]" id="folder1" multiple="" directory="" webkitdirectory="" mozdirectory="">
+                            
                             <div id="upload_file_name" style="display:none" class="alert alert-outline-primary dotted" role="alert">
                                 <strong></strong> wait uploading......
                             </div>
@@ -168,6 +173,13 @@ class VueFiles extends VueGenerique {
         <!-- Begin Vendor Js -->
         <script src="assets/vendors/js/base/jquery.min.js"></script>
         <script>
+
+            let SIZE_LISTFILES = 0;
+
+            function _(el) {
+                return document.getElementById(el);
+            }
+
             $(document).ready(function() {
                 $('#files-table').DataTable({
                     "paging": false,
@@ -176,6 +188,12 @@ class VueFiles extends VueGenerique {
 
                 $("#file1").change(function() {
                     uploadFile();
+                });
+
+                $("#folder1").change(function() {
+                    var folder = _("folder1").files;
+                    SIZE_LISTFILES = folder.length-1;
+                    uploadFolder(0);
                 });
             });
 
@@ -238,13 +256,31 @@ class VueFiles extends VueGenerique {
                 })
             }
 
-            function _(el) {
-                return document.getElementById(el);
+            function uploadFolder(index) {
+                var folder = _("folder1").files;
+                //console.log(folder[index].name+" | "+folder[index].size+" | "+folder[index].webkitRelativePath);
+                var formdata = new FormData();
+                var path_split = folder[index].webkitRelativePath.lastIndexOf("/");
+                var folder_source = folder[index].webkitRelativePath.slice(0,path_split+1);
+                formdata.append("file1", folder[index]);
+                formdata.append("folder_source", folder_source);
+                formdata.append("action", "upload_folder");
+                var ajax = new XMLHttpRequest();
+                $('#div_upload_bar').css("display", "block");
+                $('#upload_file_name').css("display", "inline-block");
+                $('#upload_file_name strong').text((index+1)+"/"+(SIZE_LISTFILES+1)+" "+folder[index].name);
+                ajax.currentIndex = index;
+                ajax.filename = 'Folder';
+                ajax.upload.addEventListener("progress", progressHandler, false);
+                ajax.addEventListener("load", completeHandler, false);
+                ajax.addEventListener("error", errorHandler, false);
+                ajax.addEventListener("abort", abortHandler, false);
+                ajax.open("POST", "./modules/files/ajax_handle_files.php");
+                ajax.send(formdata);
             }
 
             function uploadFile() {
                 var file = _("file1").files[0];
-                //alert(file.name+" | "+file.size+" | "+file.type);
                 var formdata = new FormData();
                 formdata.append("file1", file);
                 formdata.append("action", "upload_file");
@@ -252,6 +288,7 @@ class VueFiles extends VueGenerique {
                 $('#div_upload_bar').css("display", "block");
                 $('#upload_file_name').css("display", "inline-block");
                 $('#upload_file_name strong').text(file.name);
+                ajax.filename = 'File';
                 ajax.upload.addEventListener("progress", progressHandler, false);
                 ajax.addEventListener("load", completeHandler, false);
                 ajax.addEventListener("error", errorHandler, false);
@@ -273,32 +310,36 @@ class VueFiles extends VueGenerique {
             function progressHandler(event) {
                 _("loaded_n_total").innerHTML = "Uploaded " + formatBytes(event.loaded) + "/" + formatBytes(event.total);
                 var percent = (event.loaded / event.total) * 100;
-                //_("progressBar").value = Math.round(percent);
                 var actuel_percent = Math.round(percent)+"%";
                 $('#upload_bar').css("width", actuel_percent);
                 $('#upload_bar').text(actuel_percent);
             }
 
             function completeHandler(event) {
-                var response = jQuery.parseJSON(event.target.responseText);
-                if(response.is_status==200){
-                    Swal.fire({
-                        type: 'success',
-                        title: 'File successfully uploaded',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1500);
+                if(event.target.currentIndex<SIZE_LISTFILES){
+                    var nextIndex = event.target.currentIndex+1;
+                    uploadFolder(nextIndex);
                 }else{
-                    Swal.fire({
-                        type: 'error',
-                        title: response.comment,
-                    })
+                    var response = jQuery.parseJSON(event.target.responseText);
+                    if(response.is_status==200){
+                        Swal.fire({
+                            type: 'success',
+                            title: event.target.filename+' successfully uploaded',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500);
+                    }else{
+                        Swal.fire({
+                            type: 'error',
+                            title: response.comment,
+                        })
+                    }
+                    $('#upload_bar').css("width", "0%");
+                    $('#upload_bar').text("0%");
                 }
-                $('#upload_bar').css("width", "0%");
-                $('#upload_bar').text("0%");
             }
 
             function errorHandler(event) {

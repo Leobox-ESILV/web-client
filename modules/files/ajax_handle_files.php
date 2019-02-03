@@ -15,5 +15,13 @@ if(isset($_POST['action']) && $_POST['action']=="upload_file") {
     echo json_encode($result);
 }
 
+if(isset($_POST['action']) && $_POST['action']=="upload_folder") {
+    $file = $_FILES['file1'];
+    $folder_source = $_POST['folder_source'];
+    $controleur = new ControleurFiles();
+    $result = $controleur->upload_folder($file,$folder_source);
+    echo json_encode($result);
+}
+
 
 ?>

@@ -22,6 +22,11 @@ class ControleurFiles extends ControleurGenerique {
       return $this->modele->get_upload_file($file);
     }
 
+    function upload_folder($file,$folder_source){
+      $this->modele = new ModeleFiles();
+      return $this->modele->get_upload_folder($file,$folder_source);
+    }
+
     function getVue() {
       return $this->vue;
     }
