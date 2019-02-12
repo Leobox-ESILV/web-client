@@ -34,6 +34,7 @@ Author: SAEROX
         <link rel="stylesheet" href="assets/css/owl-carousel/owl.theme.min.css">
         <link rel="stylesheet" href="assets/css/datatables/datatables.min.css">
         <link rel="stylesheet" href="assets/sweetalert2/sweetalert2.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.3.2/viewer.min.css">
         <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -209,6 +210,9 @@ Author: SAEROX
         <!-- Begin Page Snippets -->
         <script src="assets/js/components/widgets/widgets.min.js"></script>
         <script src="assets/sweetalert2/sweetalert2.all.min.js"></script>
+        <script src="http://danml.com/js/download2.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.3.2/viewer.min.js"></script>
+        <script src="assets/img-viewer/jquery-viewer.min.js"></script>
         <!-- End Page Snippets -->
     </body>
 </html>

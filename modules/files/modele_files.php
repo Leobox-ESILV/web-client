@@ -147,6 +147,22 @@ class ModeleFiles extends ModeleGenerique {
         return $result;
     }
 
+    function get_open_file($id_file){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('GET', $modeleGene->getUrlApi()."file/".$username."/".$id_file, [
+			'headers' => [
+                'ApiKeyUser' => $user_token,
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'cache-control' => 'no-cache'
+            ]
+        ]);
+        return $res;
+    }
+
 }
 
 

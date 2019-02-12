@@ -134,7 +134,7 @@ class VueFiles extends VueGenerique {
                                         $this->modele = new ModeleFiles();
                                         foreach ($listFiles['sub_dir'] as $info) {
                                         ?>
-                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>','<?php echo $info['type']; ?>','<?php echo $info['id']; ?>')">
+                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>','<?php echo $info['type']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')">
                                             <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
                                             <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
                                             <td><?php echo explode(',',$info['type'])[0]; ?></td>
@@ -197,12 +197,46 @@ class VueFiles extends VueGenerique {
                 });
             });
 
-            function click_on_files(path_file,type,id){
+            function click_on_files(path_file,type,id,mime_type){
                 if(type=="Folder"){
                     window.open("index.php?module=files&open="+path_file,"_self");
                 }else{
-                    
+                    open_file(id,mime_type)
                 }
+            }
+            
+            function open_file(id,mime_type){
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        action:"open_file",
+                        id_file:id
+                    },
+                    url: "./modules/files/ajax_handle_files.php",
+                    async: false,
+                    success: function(data) {
+                        if(mime_type.includes('image')){
+                            var image = new Image();
+                            image.src = 'data:'+mime_type+';base64,'+data;
+                            $(image).viewer('show');
+                        }else{
+                            /* var fileReader = new FileReader();
+                            var blob = new Blob([data], { type: 'application/pdf'});
+                            fileReader.onloadend = function(e) {
+                                window.open(fileReader.result, '_blank');
+                            };
+                            fileReader.readAsDataURL(blob); */
+                            var pdfResult = data;
+                            let pdfWindow = window.open("")
+                            pdfWindow.document.write("<iframe width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(pdfResult) + "'></iframe>")
+                            /* var a = document.createElement('a');
+                            a.href= "data:application/octet-stream;base64,"+data;
+                            a.target = '_blank';
+                            a.download = 'filename.pdf';
+                            a.click(); */
+                        }
+                    }
+                });
             }
             
             function create_folder(){
