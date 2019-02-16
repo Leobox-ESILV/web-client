@@ -37,8 +37,8 @@ class VueFiles extends VueGenerique {
                     <div>
                         <div class="row">
                             <div class="col-xl-8 d-flex flex-column justify-content-center align-items-center">
-                                <div class="counter"><?php echo $_SESSION['used_space']."/".$_SESSION['quota']; ?></div>
-                                <div class="total-views">Used space / Total space</div>
+                                <div class="counter"><?php echo $_SESSION['used_space']; ?></div>
+                                <div class="total-views">Used space (Total space : <?php echo $_SESSION['quota']; ?>)</div>
                             </div>
                             <div class="col-xl-4 d-flex justify-content-center align-items-center">
                                 <div class="pages-views" id="circle_used_space">
@@ -201,6 +201,16 @@ class VueFiles extends VueGenerique {
                 return document.getElementById(el);
             }
             var percent_used = <?php echo $_SESSION['percent_used'] ?>;
+
+            var color_circle = []
+            if(percent_used<50){
+                color_circle = ["#99ffcc", "#009933"]
+            }else if (percent_used<80){
+                color_circle = ["#ffff66", "#ff9900"]
+            }else{
+                color_circle = ["#ff9999", "#cc0000"]
+            }
+
             $("#circle_used_space").circleProgress({
                 value: percent_used/100,
                 size: 100,
@@ -209,7 +219,7 @@ class VueFiles extends VueGenerique {
                 lineCap: "round",
                 emptyFill: "#f0eff4",
                 fill: {
-                    gradient: ["#f9a58d", "#e76c90"]
+                    gradient: color_circle
                 }
             }).on("circle-animation-progress", function(f, e) {
                 $(this).find(".percent").html(Math.round(percent_used * e) + "<i>%</i>")

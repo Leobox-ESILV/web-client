@@ -19,7 +19,7 @@ class ControleurConnexion extends ControleurGenerique {
 			$_SESSION['display_name'] = $result->display_name;
 			$_SESSION['email'] = $result->email;
 			$_SESSION['quota'] = $this->modele->formatBytes($result->quota,'MB');
-			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space,'MB');
+			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space);
 			$_SESSION['percent_used'] = ($result->used_space/$result->quota)*100;
 			$_SESSION['user_token'] = $result->user_token;
 			$_SESSION['file_count'] = $result->file_count;
