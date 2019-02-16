@@ -33,18 +33,16 @@ class VueFiles extends VueGenerique {
         <div class="row flex-row">
             <!-- Begin Widget 16 -->
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                <div class="widget widget-16 has-shadow">
-                    <div class="widget-body">
+                <div class="widget widget-16" style="background:transparent">
+                    <div>
                         <div class="row">
                             <div class="col-xl-8 d-flex flex-column justify-content-center align-items-center">
-                                <div class="counter">258,036</div>
-                                <div class="total-views">Total Page Views</div>
+                                <div class="counter"><?php echo $_SESSION['used_space']."/".$_SESSION['quota']; ?></div>
+                                <div class="total-views">Used space / Total space</div>
                             </div>
                             <div class="col-xl-4 d-flex justify-content-center align-items-center">
-                                <div class="pages-views">
-                                    <div class="percent">
-                                        <canvas id="today-chart"></canvas>
-                                    </div>
+                                <div class="pages-views" id="circle_used_space">
+                                    <div class="percent"></div>
                                 </div>
                             </div>
                         </div>
@@ -53,18 +51,31 @@ class VueFiles extends VueGenerique {
             </div>
             <!-- End Widget 16 -->
             <!-- Begin Widget 17 -->
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                <div class="widget widget-17 has-shadow">
+            <div class="col-xl-3 col-md-6 col-sm-6">
+                <div class="widget widget-12 has-shadow">
                     <div class="widget-body">
-                        <div class="row">
-                            <div class="col-xl-7 d-flex flex-column justify-content-center align-items-center">
-                                <div class="counter">1,658</div>
-                                <div class="total-visitors">Visitors Online</div>
+                        <div class="media">
+                            <div class="align-self-center ml-5 mr-5">
+                                <i class="ti ti-files"></i>
                             </div>
-                            <div class="col-xl-5 d-flex justify-content-center align-items-center">
-                                <div class="visitors">
-                                    <div class="percent"></div>
-                                </div>
+                            <div class="media-body align-self-center">
+                                <div class="title"><?php echo $_SESSION['dir_count'] ?></div>
+                                <div class="number">Folder(s)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 col-sm-6">
+                <div class="widget widget-12 has-shadow">
+                    <div class="widget-body">
+                        <div class="media">
+                            <div class="align-self-center ml-5 mr-5">
+                                <i class="ti ti-folder"></i>
+                            </div>
+                            <div class="media-body align-self-center">
+                                <div class="title"><?php echo $_SESSION['file_count'] ?></div>
+                                <div class="number">File(s)</div>
                             </div>
                         </div>
                     </div>
@@ -158,6 +169,15 @@ class VueFiles extends VueGenerique {
                                         }
                                         ?>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-harddrives"></i>Size</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-layout-tab"></i>Type</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-timer"></i>Modification</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         <?php
@@ -172,6 +192,7 @@ class VueFiles extends VueGenerique {
         </div>
         <!-- Begin Vendor Js -->
         <script src="assets/vendors/js/base/jquery.min.js"></script>
+        <script src="assets/vendors/js/progress/circle-progress.min.js"></script>
         <script>
 
             let SIZE_LISTFILES = 0;
@@ -179,12 +200,50 @@ class VueFiles extends VueGenerique {
             function _(el) {
                 return document.getElementById(el);
             }
+            var percent_used = <?php echo $_SESSION['percent_used'] ?>;
+            $("#circle_used_space").circleProgress({
+                value: percent_used/100,
+                size: 100,
+                startAngle: -Math.PI / 2,
+                thickness: 10,
+                lineCap: "round",
+                emptyFill: "#f0eff4",
+                fill: {
+                    gradient: ["#f9a58d", "#e76c90"]
+                }
+            }).on("circle-animation-progress", function(f, e) {
+                $(this).find(".percent").html(Math.round(percent_used * e) + "<i>%</i>")
+            });
 
             $(document).ready(function() {
-                $('#files-table').DataTable({
-                    "paging": false,
-                    "searching": false
+                // Setup - add a text input to each footer cell
+                $('#files-table tfoot th').each( function () {
+                    var title = $(this).text();
+                    if($(this).text()!=""){
+                        $(this).html( '<input class="form-control form-control-sm" type="text" placeholder="Search '+title+'" />' );
+                    }
                 });
+            
+                // DataTable
+                var file_datatable = $('#files-table').DataTable({
+                    "paging": false
+                });
+
+                $(".dataTables_filter").hide();
+            
+                // Apply the search
+                file_datatable.columns().every( function () {
+                    var that = this;
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                                .search( this.value )
+                                .draw();
+                        }
+                    });
+                });
+
+                $('#files-table tfoot tr').insertAfter($('#files-table thead tr'))
 
                 $("#file1").change(function() {
                     uploadFile();
@@ -201,11 +260,11 @@ class VueFiles extends VueGenerique {
                 if(type=="Folder"){
                     window.open("index.php?module=files&open="+path_file,"_self");
                 }else{
-                    open_file(id,mime_type)
+                    open_file(id,mime_type,path_file)
                 }
             }
             
-            function open_file(id,mime_type){
+            function open_file(id,mime_type,path_file){
                 $.ajax({
                     type: "POST",
                     data: {
@@ -219,16 +278,10 @@ class VueFiles extends VueGenerique {
                             var image = new Image();
                             image.src = 'data:'+mime_type+';base64,'+data;
                             $(image).viewer('show');
-                        }else{
-                            /* var fileReader = new FileReader();
-                            var blob = new Blob([data], { type: 'application/pdf'});
-                            fileReader.onloadend = function(e) {
-                                window.open(fileReader.result, '_blank');
-                            };
-                            fileReader.readAsDataURL(blob); */
-                            var pdfResult = data;
-                            let pdfWindow = window.open("")
-                            pdfWindow.document.write("<iframe width='100%' height='100%' src='data:application/pdf;base64, " + encodeURI(pdfResult) + "'></iframe>")
+                        }else if(mime_type.includes('pdf')){
+                            let pdfWindow =  window.open('');
+                            var name_file = path_file.split("/").pop(-1);
+                            pdfWindow.document.write('<html><head><title>'+name_file+'</title></head><body height="100%" width="100%"><iframe src="data:application/pdf;base64, '+encodeURI(data)+'" height="100%" width="100%"></iframe></body></html>');
                             /* var a = document.createElement('a');
                             a.href= "data:application/octet-stream;base64,"+data;
                             a.target = '_blank';

@@ -22,6 +22,10 @@ date_default_timezone_set('Europe/Paris');
 	    $nom_module = "connexion";
 	}
 
+	if (isset($_SESSION['user_token'])) {
+	    $nom_module = "files";
+	}
+
 	switch ($nom_module) {
 		case "home":
 		case "files":

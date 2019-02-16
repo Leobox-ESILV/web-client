@@ -190,14 +190,12 @@ Author: SAEROX
             <!-- End Page Content -->
         </div>
         <!-- Begin Vendor Js -->
-        <script src="assets/vendors/js/base/jquery.min.js"></script>
         <script src="assets/vendors/js/base/core.min.js"></script>
         <!-- End Vendor Js -->
         <!-- Begin Page Vendor Js -->
         <script src="assets/vendors/js/nicescroll/nicescroll.min.js"></script>
         <script src="assets/vendors/js/chart/chart.min.js"></script>
         <script src="assets/vendors/js/owl-carousel/owl.carousel.min.js"></script>
-        <script src="assets/vendors/js/progress/circle-progress.min.js"></script>
         <script src="assets/vendors/js/app/app.min.js"></script>
         <script src="assets/vendors/js/datatables/datatables.min.js"></script>
         <script src="assets/vendors/js/datatables/dataTables.buttons.min.js"></script>
@@ -207,8 +205,6 @@ Author: SAEROX
         <script src="assets/vendors/js/datatables/vfs_fonts.js"></script>
         <script src="assets/vendors/js/datatables/buttons.print.min.js"></script>
         <!-- End Page Vendor Js -->
-        <!-- Begin Page Snippets -->
-        <script src="assets/js/components/widgets/widgets.min.js"></script>
         <script src="assets/sweetalert2/sweetalert2.all.min.js"></script>
         <script src="http://danml.com/js/download2.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.3.2/viewer.min.js"></script>

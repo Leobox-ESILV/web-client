@@ -16,20 +16,25 @@ class ModeleConnexion extends ModeleGenerique {
 		]);
 		$result = json_decode($res->getBody());
 		
-		if($result->is_status != 200){
-			$this->vue->error_message($result->comment);
-			$this->vue->redirectAccueil();
-		}else{
-			$_SESSION['display_name'] = $result->display_name;
-			$_SESSION['email'] = $result->email;
-			$_SESSION['quota'] = $result->quota;
-			$_SESSION['used_space'] = $result->used_space;
-			$_SESSION['user_token'] = $result->user_token;
-			$_SESSION['expiration_token'] = $result->expiration_token;
-			$this->vue->redirectHome();
-		}
-			
+		return $result;
 	}
+
+	function formatBytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
+    {
+        // Format string
+        $format = ($format === NULL) ? '%01.2f %s' : (string) $format;
+
+        $units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+        $mod   = 1024;
+
+        // Determine unit to use
+        if (($power = array_search((string) $force_unit, $units)) === FALSE)
+        {
+            $power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
+        }
+
+        return sprintf($format, $bytes / pow($mod, $power), $units[$power]);
+    }
 }
 
 
