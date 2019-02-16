@@ -133,11 +133,11 @@ class VueFiles extends VueGenerique {
                                 <table id="files-table" class="table table-hover mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-bookmark-alt"></i>Name</th>
                                             <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-harddrives"></i>Size</th>
-                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-layout-tab"></i>Type</th>
-                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="la ti-timer"></i>Modification</th>
-                                            <th>Actions</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-layout-tab"></i>Type</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-timer"></i>Modification</th>
+                                            <th><i style="font-size:1rem;margin-right:5px;color:#98a8b4;" class="ti ti-layout-grid2"></i>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -230,6 +230,7 @@ class VueFiles extends VueGenerique {
                 });
 
                 $(".dataTables_filter").hide();
+                $("#files-table tr").css('cursor', 'pointer');
             
                 // Apply the search
                 file_datatable.columns().every( function () {
@@ -257,10 +258,13 @@ class VueFiles extends VueGenerique {
             });
 
             function click_on_files(path_file,type,id,mime_type){
-                if(type=="Folder"){
-                    window.open("index.php?module=files&open="+path_file,"_self");
-                }else{
-                    open_file(id,mime_type,path_file)
+                closet_click_td = $(event.target).closest('td').attr('id');
+                if(closet_click_td!="td_actions"){
+                    if(type=="Folder"){
+                        window.open("index.php?module=files&open="+path_file,"_self");
+                    }else{
+                        open_file(id,mime_type,path_file)
+                    }
                 }
             }
             
