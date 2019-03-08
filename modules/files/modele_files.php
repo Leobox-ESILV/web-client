@@ -6,7 +6,7 @@ require_once(dirname(__FILE__,3).'/vendor/autoload.php');
 class ModeleFiles extends ModeleGenerique {
 
     function set_mime_type($mime_type){
-        if(strstr($mime_type,'image/')){
+        if(strstr($mime_type,'image')){
             $value = 'la-file-photo-o';
         }else if(strstr($mime_type,'directory')){
             $value = 'la-folder-o';
@@ -30,7 +30,7 @@ class ModeleFiles extends ModeleGenerique {
         $format = ($format === NULL) ? '%01.2f %s' : (string) $format;
 
         $units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-        $mod   = 1024;
+        $mod   = 1000;
 
         // Determine unit to use
         if (($power = array_search((string) $force_unit, $units)) === FALSE)
@@ -95,7 +95,7 @@ class ModeleFiles extends ModeleGenerique {
                 'ApiKeyUser' => $user_token
             ]
         ]);
-        $result = json_decode($res->getBody(), true);
+        $result = json_decode($res->getBody());
         return $result;
     }
 
@@ -119,7 +119,7 @@ class ModeleFiles extends ModeleGenerique {
                 ]
             ]
         ]);
-        $result = json_decode($res->getBody(), true);
+        $result = json_decode($res->getBody());
         return $result;
     }
 
@@ -143,11 +143,11 @@ class ModeleFiles extends ModeleGenerique {
                 ]
             ]
         ]);
-        $result = json_decode($res->getBody(), true);
+        $result = json_decode($res->getBody());
         return $result;
     }
 
-    function get_open_file($id_file){
+    function get_openDownload_file($id_file){
         $user_token = $_SESSION['user_token'];
         $username = $_SESSION['display_name'];
         $modeleGene = new ModeleGenerique();

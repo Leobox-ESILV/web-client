@@ -20,9 +20,9 @@ class VueFiles extends VueGenerique {
                     <h2 class="page-header-title">Files</h2>
                     <div>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="dashboard.html"><i class="ti ti-home"></i></a></li>
-                            <li class="breadcrumb-item"><a href="#">Components</a></li>
-                            <li class="breadcrumb-item active">Widgets</li>
+                            <li class="breadcrumb-item active"><i class="ti ti-home"></i></li>
+                            <li class="breadcrumb-item"><a href="#">Files</a></li>
+                            <li class="breadcrumb-item"><a href="#">Shared</a></li>
                         </ul>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ class VueFiles extends VueGenerique {
                     <div class="widget-body">
                         <div class="media">
                             <div class="align-self-center ml-5 mr-5">
-                                <i class="ti ti-files"></i>
+                                <i class="ti ti-folder"></i>
                             </div>
                             <div class="media-body align-self-center">
                                 <div class="title"><?php echo $_SESSION['dir_count'] ?></div>
@@ -71,7 +71,7 @@ class VueFiles extends VueGenerique {
                     <div class="widget-body">
                         <div class="media">
                             <div class="align-self-center ml-5 mr-5">
-                                <i class="ti ti-folder"></i>
+                                <i class="ti ti-files"></i>
                             </div>
                             <div class="media-body align-self-center">
                                 <div class="title"><?php echo $_SESSION['file_count'] ?></div>
@@ -91,7 +91,7 @@ class VueFiles extends VueGenerique {
                 <!-- Begin Widget Header -->
                 <div class="widget has-shadow">
                     <div class="widget-header bordered no-actions d-flex align-items-center">
-                        <h4>Leobox <?php echo "> ".str_replace('/',' > ',$_SESSION['current_path_file']); ?></h4>
+                        <h4>Leobox <?php if(strlen($_SESSION['current_path_file'])>=2){ echo "> ".str_replace('/',' > ',$_SESSION['current_path_file']); } ?></h4>
                     </div>
                     <div class="widget-body">
                         <form id="upload_form" enctype="multipart/form-data" method="post">
@@ -145,7 +145,7 @@ class VueFiles extends VueGenerique {
                                         $this->modele = new ModeleFiles();
                                         foreach ($listFiles['sub_dir'] as $info) {
                                         ?>
-                                        <tr class="table_files" onclick="click_on_files('<?php echo $info['path_file']; ?>','<?php echo $info['type']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')">
+                                        <tr class="table_files" onclick="click_on_row('<?php echo $info['path_file']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')">
                                             <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
                                             <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
                                             <td><?php echo explode(',',$info['type'])[0]; ?></td>
@@ -157,10 +157,16 @@ class VueFiles extends VueGenerique {
                                                         <i class="la la-angle-down mr-0"></i>
                                                     </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#"><i class="la la-download"></i> Download</a>
-                                                        <a class="dropdown-item" href="#"><i class="la la-remove"></i> Delete</a>
+                                                    <?php 
+                                                    if(!strstr($info['mime_type'],'directory')){
+                                                    ?>
+                                                        <a class="dropdown-item" onclick="click_download_file('<?php echo $info['path_file']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')"><i class="la la-download"></i> Download</a>
+                                                    <?php 
+                                                    }
+                                                    ?>
+                                                        <a class="dropdown-item" href="#"><i class="la la-wrench"></i> Rename</a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item" href="#"><i class="la la-history"></i> Version History</a>
+                                                        <a class="dropdown-item" href="#"><i class="la la-remove"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -236,10 +242,11 @@ class VueFiles extends VueGenerique {
             
                 // DataTable
                 var file_datatable = $('#files-table').DataTable({
-                    "paging": false
+                    "pageLength": 25
                 });
 
                 $(".dataTables_filter").hide();
+                $(".dataTables_length").hide();
                 $("#files-table tr").css('cursor', 'pointer');
             
                 // Apply the search
@@ -267,22 +274,46 @@ class VueFiles extends VueGenerique {
                 });
             });
 
-            function click_on_files(path_file,type,id,mime_type){
+            function click_on_row(path_file,id,mime_type){
                 closet_click_td = $(event.target).closest('td').attr('id');
                 if(closet_click_td!="td_actions"){
-                    if(type=="Folder"){
+                    if(mime_type.includes('directory')){
                         window.open("index.php?module=files&open="+path_file,"_self");
-                    }else{
+                    }else if(mime_type.includes('image') || mime_type.includes('text') || mime_type.includes('pdf')){
                         open_file(id,mime_type,path_file)
+                    }else{
+                        Swal.fire({
+                            type: 'error',
+                            title: 'This format is not supported',
+                        })
                     }
                 }
+            }
+
+            function click_download_file(path_file,id,mime_type){
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        action:"openDownload_file",
+                        id_file:id
+                    },
+                    url: "./modules/files/ajax_handle_files.php",
+                    async: false,
+                    success: function(data) {
+                        var a = document.createElement('a');
+                        a.href= "data:application/octet-stream;base64,"+data;
+                        a.target = '_blank';
+                        a.download = path_file.split("/").pop(-1);
+                        a.click();
+                    }
+                });
             }
             
             function open_file(id,mime_type,path_file){
                 $.ajax({
                     type: "POST",
                     data: {
-                        action:"open_file",
+                        action:"openDownload_file",
                         id_file:id
                     },
                     url: "./modules/files/ajax_handle_files.php",
@@ -291,16 +322,12 @@ class VueFiles extends VueGenerique {
                         if(mime_type.includes('image')){
                             var image = new Image();
                             image.src = 'data:'+mime_type+';base64,'+data;
+                            image.alt = path_file.split("/").pop(-1);
                             $(image).viewer('show');
-                        }else if(mime_type.includes('pdf')){
+                        }else if(mime_type.includes('pdf') || mime_type.includes('text')) {
                             let pdfWindow =  window.open('');
                             var name_file = path_file.split("/").pop(-1);
-                            pdfWindow.document.write('<html><head><title>'+name_file+'</title></head><body height="100%" width="100%"><iframe src="data:application/pdf;base64, '+encodeURI(data)+'" height="100%" width="100%"></iframe></body></html>');
-                            /* var a = document.createElement('a');
-                            a.href= "data:application/octet-stream;base64,"+data;
-                            a.target = '_blank';
-                            a.download = 'filename.pdf';
-                            a.click(); */
+                            pdfWindow.document.write('<html><head><title>'+name_file+'</title></head><body height="100%" width="100%"><iframe src="data:'+mime_type+';base64, '+encodeURI(data)+'" height="97%" width="100%"></iframe></body></html>');
                         }
                     }
                 });
@@ -400,7 +427,7 @@ class VueFiles extends VueGenerique {
 
             function formatBytes(bytes,decimals) {
                 if(bytes == 0) return '0 Bytes';
-                var k = 1024,
+                var k = 1000,
                     dm = decimals <= 0 ? 0 : decimals || 2,
                     sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
                     i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -440,10 +467,16 @@ class VueFiles extends VueGenerique {
                     }
                     $('#upload_bar').css("width", "0%");
                     $('#upload_bar').text("0%");
+                    $('#div_upload_bar').css("display", "none");
+                    $('#upload_file_name').css("display", "none");
+                    _("loaded_n_total").innerHTML = ""
                 }
             }
 
             function errorHandler(event) {
+                $('#div_upload_bar').css("display", "none");
+                $('#upload_file_name').css("display", "none");
+                _("loaded_n_total").innerHTML = ""
                 Swal.fire({
                     type: 'error',
                     title: "Upload Failed",
@@ -451,6 +484,9 @@ class VueFiles extends VueGenerique {
             }
 
             function abortHandler(event) {
+                $('#div_upload_bar').css("display", "none");
+                $('#upload_file_name').css("display", "none");
+                _("loaded_n_total").innerHTML = ""
                 Swal.fire({
                     type: 'error',
                     title: "Upload Aborted",

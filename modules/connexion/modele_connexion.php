@@ -25,7 +25,7 @@ class ModeleConnexion extends ModeleGenerique {
         $format = ($format === NULL) ? '%01.2f %s' : (string) $format;
 
         $units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-        $mod   = 1024;
+        $mod   = 1000;
 
         // Determine unit to use
         if (($power = array_search((string) $force_unit, $units)) === FALSE)

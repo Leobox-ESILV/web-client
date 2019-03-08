@@ -64,7 +64,7 @@ Author: SAEROX
                     <div class="navbar-holder d-flex align-items-center align-middle justify-content-between">
                         <!-- Begin Logo -->
                         <div class="navbar-header">
-                            <a href="db-default.html" class="navbar-brand">
+                            <a href="index.php?module=files" class="navbar-brand">
                                 <div class="brand-image brand-big">
                                     <img src="assets/img/logo-big.png" alt="logo" class="logo-big">
                                 </div>
@@ -131,8 +131,7 @@ Author: SAEROX
                     <nav class="side-navbar box-scroll sidebar-scroll">
                         <!-- Begin Main Navigation -->
                         <ul class="list-unstyled">
-                            <li class="active"><a href="#"><i class="la la-home"></i><span>Home</span></a></li>
-                            <li><a href="#"><i class="ti ti-folder"></i><span>Files</span></a></li>
+                            <li class="active"><a href="index.php?module=files"><i class="ti ti-folder"></i><span>Files</span></a></li>
                             <li><a href="#"><i class="ti ti-sharethis"></i><span>Shared</span></a></li>
                         </ul>
                     </nav>
