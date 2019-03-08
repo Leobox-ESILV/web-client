@@ -164,7 +164,7 @@ class VueFiles extends VueGenerique {
                                                     <?php 
                                                     }
                                                     ?>
-                                                        <a class="dropdown-item" href="#"><i class="la la-wrench"></i> Rename</a>
+                                                        <a class="dropdown-item" onclick="click_rename('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')"><i class="la la-wrench"></i> Rename</a>
                                                         <div class="dropdown-divider"></div>
                                                         <a class="dropdown-item" href="#"><i class="la la-remove"></i> Delete</a>
                                                     </div>
@@ -308,6 +308,60 @@ class VueFiles extends VueGenerique {
                     }
                 });
             }
+
+            function click_rename(id_file,name_file){
+                Swal.fire({
+                    title: 'Rename File',
+                    html: '<p>Current name : '+name_file.split(".")[0]+'</p>',
+                    input: 'text',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText:
+                    '<i class="la la-wrench"></i> Rename',
+                    cancelButtonText:
+                    '<i class="la la-remove"></i> Cancel',
+                    showLoaderOnConfirm: true,
+                    }).then((result) => {
+                        if(typeof result.value !== "undefined"){
+                            var new_name = result.value;
+                            if(name_file.includes('.')){
+                                new_name = result.value+'.'+name_file.split(".")[1]
+                            }
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    action:"rename",
+                                    id_file:id_file,
+                                    new_name:new_name
+                                },
+                                url: "./modules/files/ajax_handle_files.php",
+                                async: false,
+                                success: function(data) {
+                                    console.log(data)
+                                    var response = jQuery.parseJSON(data);
+                                    if(response.is_status==200){
+                                        Swal.fire({
+                                            type: 'success',
+                                            title: 'Rename successfully file !',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1500);
+                                    }else{
+                                        Swal.fire({
+                                            type: 'error',
+                                            title: response.comment,
+                                        })
+                                    }
+                                }
+                            });
+                        }    
+                    })
+            }
             
             function open_file(id,mime_type,path_file){
                 $.ajax({
@@ -361,7 +415,6 @@ class VueFiles extends VueGenerique {
                                 async: false,
                                 success: function(data) {
                                     var response = jQuery.parseJSON(data);
-                                    console.log(response);
                                     if(response.is_status==200){
                                         Swal.fire({
                                             type: 'success',
@@ -381,12 +434,11 @@ class VueFiles extends VueGenerique {
                                 }
                             });
                         }    
-                })
+                    })
             }
 
             function uploadFolder(index) {
                 var folder = _("folder1").files;
-                //console.log(folder[index].name+" | "+folder[index].size+" | "+folder[index].webkitRelativePath);
                 var formdata = new FormData();
                 var path_split = folder[index].webkitRelativePath.lastIndexOf("/");
                 var folder_source = folder[index].webkitRelativePath.slice(0,path_split+1);

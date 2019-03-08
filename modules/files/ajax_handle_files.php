@@ -30,5 +30,13 @@ if(isset($_POST['action']) && $_POST['action']=="openDownload_file") {
     echo base64_encode($res->getBody());
 }
 
+if(isset($_POST['action']) && $_POST['action']=="rename") {
+    $id_file = $_POST['id_file'];
+    $new_name = $_POST['new_name'];
+    $controleur = new ControleurFiles();
+    $result = $controleur->rename($id_file,$new_name);
+    echo json_encode($result);
+}
+
 
 ?>

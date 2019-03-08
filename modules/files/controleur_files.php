@@ -57,6 +57,15 @@ class ControleurFiles extends ControleurGenerique {
 		return $this->modele->get_openDownload_file($id_file);
 	}
 
+	function rename($id_file,$new_name){
+		$this->modele = new ModeleFiles();
+		$result = $this->modele->get_rename($id_file,$new_name);
+		if($result->is_status==200){
+			unset($_SESSION['list_dir']);
+		}
+		return $result;
+	}
+
 	function getVue() {
 		return $this->vue;
 	}

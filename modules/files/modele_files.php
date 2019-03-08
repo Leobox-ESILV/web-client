@@ -163,6 +163,25 @@ class ModeleFiles extends ModeleGenerique {
         return $res;
     }
 
+    function get_rename($id_file,$new_name){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('PUT', $modeleGene->getUrlApi()."file/".$username."/".$id_file, [
+            'query' => [
+                'action' => 1, 
+                'path_file' => $new_name
+            ],
+			'headers' => [
+                'ApiKeyUser' => $user_token
+            ]
+        ]);
+        $result = json_decode($res->getBody());
+        return $result;
+    }
+
 }
 
 
