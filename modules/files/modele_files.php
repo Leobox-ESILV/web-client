@@ -182,6 +182,55 @@ class ModeleFiles extends ModeleGenerique {
         return $result;
     }
 
+    function get_delete($id_file){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('DELETE', $modeleGene->getUrlApi()."file/".$username."/".$id_file, [
+			'headers' => [
+                'ApiKeyUser' => $user_token
+            ]
+        ]);
+        $result = json_decode($res->getBody());
+        return $result;
+    }
+
+    function get_userToShare(){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('GET', $modeleGene->getUrlApi()."user/".$username, [
+			'headers' => [
+                'ApiKeyUser' => $user_token
+            ]
+        ]);
+        $result = json_decode($res->getBody());
+        return $result;
+    }
+
+    function set_userToShare($id_file,$user_toshare){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+		$res = $client->request('POST', $modeleGene->getUrlApi()."share/".$username."/access", [
+            'query' => [
+                'username_shared' => $user_toshare, 
+                'id_file' => $id_file
+            ],
+			'headers' => [
+                'ApiKeyUser' => $user_token
+            ]
+        ]);
+        $result = json_decode($res->getBody());
+        return $result;
+    }
+
 }
 
 

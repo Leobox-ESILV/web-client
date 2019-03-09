@@ -83,7 +83,7 @@ Author: SAEROX
                         <!-- Begin Navbar Menu -->
                         <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center pull-right">
                             <!-- Search -->
-                            <li class="nav-item d-flex align-items-center"><a id="search" href="#"><i class="la la-search"></i></a></li>
+                            <!-- <li class="nav-item d-flex align-items-center"><a id="search" href="#"><i class="la la-search"></i></a></li> -->
                             <!-- End Search -->
                             <!-- User -->
                             <li class="nav-item dropdown"><a id="user" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><img src="assets/img/avatar/avatar-01.jpg" alt="..." class="avatar rounded-circle"></a>
@@ -93,24 +93,14 @@ Author: SAEROX
                                         <img src="assets/img/avatar/avatar-01.jpg" alt="..." class="rounded-circle">
                                     </li>
                                     <li>
-                                        <a href="pages-profile.html" class="dropdown-item"> 
-                                            Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="app-mail.html" class="dropdown-item"> 
-                                            Messages
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="dropdown-item no-padding-bottom"> 
-                                            Settings
+                                        <a class="dropdown-item no-padding-bottom" style="text-align: center;"> 
+                                            Hello <?php echo $_SESSION['display_name'] ?> !
                                         </a>
                                     </li>
                                     <li class="separator"></li>
                                     <li>
                                         <a href="pages-faq.html" class="dropdown-item no-padding-top"> 
-                                            Faq
+                                            Profil
                                         </a>
                                     </li>
                                     <li><a rel="nofollow" href="pages-login.html" class="dropdown-item logout text-center"><i class="ti-power-off"></i></a></li>
@@ -130,9 +120,15 @@ Author: SAEROX
                     <!-- Begin Side Navbar -->
                     <nav class="side-navbar box-scroll sidebar-scroll">
                         <!-- Begin Main Navigation -->
+                        </br>
+                        <span class="heading">My Leobox</span>
                         <ul class="list-unstyled">
-                            <li class="active"><a href="index.php?module=files"><i class="ti ti-folder"></i><span>Files</span></a></li>
+                            <li class="active"><a href="index.php?module=files"><i class="ti ti-folder"></i><span>My Files</span></a></li>
                             <li><a href="#"><i class="ti ti-sharethis"></i><span>Shared</span></a></li>
+                        </ul>
+                        <span class="heading">My addons</span>
+                        <ul class="list-unstyled">
+                            <li><a href="#"><i class="ti ti-bar-chart"></i><span>My View</span></a></li>
                         </ul>
                     </nav>
                     <!-- End Side Navbar -->

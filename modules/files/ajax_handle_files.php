@@ -38,5 +38,26 @@ if(isset($_POST['action']) && $_POST['action']=="rename") {
     echo json_encode($result);
 }
 
+if(isset($_POST['action']) && $_POST['action']=="delete") {
+    $id_file = $_POST['id_file'];
+    $controleur = new ControleurFiles();
+    $result = $controleur->delete($id_file);
+    echo json_encode($result);
+}
+
+if(isset($_POST['action']) && $_POST['action']=="get_userToShare") {
+    $controleur = new ControleurFiles();
+    $result = $controleur->getuserToShare();
+    echo json_encode($result);
+}
+
+if(isset($_POST['action']) && $_POST['action']=="set_userToShare") {
+    $id_file = $_POST['id_file'];
+    $user_toshare = $_POST['user_toshare'];
+    $controleur = new ControleurFiles();
+    $result = $controleur->setuserToShare($id_file,$user_toshare);
+    echo json_encode($result);
+}
+
 
 ?>

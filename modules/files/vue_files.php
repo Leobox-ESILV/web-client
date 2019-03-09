@@ -17,11 +17,11 @@ class VueFiles extends VueGenerique {
         <div class="row">
             <div class="page-header">
                 <div class="d-flex align-items-center">
-                    <h2 class="page-header-title">Files</h2>
+                    <h2 class="page-header-title">My Files</h2>
                     <div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item active"><i class="ti ti-home"></i></li>
-                            <li class="breadcrumb-item"><a href="#">Files</a></li>
+                            <li class="breadcrumb-item"><a href="#">My Files</a></li>
                             <li class="breadcrumb-item"><a href="#">Shared</a></li>
                         </ul>
                     </div>
@@ -152,7 +152,7 @@ class VueFiles extends VueGenerique {
                                             <td><?php echo date('d/m/Y H:i', $info['storage_mtime']); ?></td>
                                             <td id="td_actions">
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-secondary"><i class="la la-share"></i>Share</button>
+                                                    <button type="button" onclick="click_shared('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')" class="btn btn-secondary"><i class="la la-share"></i>Share</button>
                                                     <a class="btn btn-secondary dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="la la-angle-down mr-0"></i>
                                                     </a>
@@ -166,7 +166,7 @@ class VueFiles extends VueGenerique {
                                                     ?>
                                                         <a class="dropdown-item" onclick="click_rename('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')"><i class="la la-wrench"></i> Rename</a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item" href="#"><i class="la la-remove"></i> Delete</a>
+                                                        <a class="dropdown-item" onclick="click_delete('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')"><i class="la la-remove"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -314,6 +314,7 @@ class VueFiles extends VueGenerique {
                     title: 'Rename File',
                     html: '<p>Current name : '+name_file.split(".")[0]+'</p>',
                     input: 'text',
+                    type: 'info',
                     inputAttributes: {
                         autocapitalize: 'off'
                     },
@@ -339,7 +340,6 @@ class VueFiles extends VueGenerique {
                                 url: "./modules/files/ajax_handle_files.php",
                                 async: false,
                                 success: function(data) {
-                                    console.log(data)
                                     var response = jQuery.parseJSON(data);
                                     if(response.is_status==200){
                                         Swal.fire({
@@ -361,6 +361,126 @@ class VueFiles extends VueGenerique {
                             });
                         }    
                     })
+            }
+
+            function click_delete(id_file,name_file){
+                Swal.fire({
+                title: 'Are you sure ?',
+                html: "<p>You won't be able to revert this !</p><p style='font-weight:bold;'>"+name_file+"</p>",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if(result.value){
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    action:"delete",
+                                    id_file:id_file
+                                },
+                                url: "./modules/files/ajax_handle_files.php",
+                                async: false,
+                                success: function(data) {
+                                    var response = jQuery.parseJSON(data);
+                                    if(response.is_status==200){
+                                        Swal.fire({
+                                            type: 'success',
+                                            title: 'Delete successfully file !',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1500);
+                                    }else{
+                                        Swal.fire({
+                                            type: 'error',
+                                            title: response.comment,
+                                        })
+                                    }
+                                }
+                            });
+                        }    
+                    })
+            }
+
+            function click_shared(id_file,name_file){
+                
+                var json_list_user = {}
+                var user_name = "<?php echo $_SESSION['display_name'] ?>";
+                
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        action:"get_userToShare"
+                    },
+                    url: "./modules/files/ajax_handle_files.php",
+                    async: false,
+                    success: function(data) {
+                        var response = jQuery.parseJSON(data);
+                        var list_user = response.list_name
+                        for (i in list_user){
+                            if(user_name!=list_user[i].display_name){
+                                json_list_user[list_user[i].display_name] = list_user[i].display_name
+                            }
+                        }
+                    }
+                });
+
+                Swal.fire({
+                    title: name_file,
+                    input: 'select',
+                    inputOptions: json_list_user,
+                    inputPlaceholder: 'Click for select a user',
+                    showCancelButton: true,
+                    imageUrl: 'https://cdn0.iconfinder.com/data/icons/social-media-2183/512/social__media__social_media__share_-256.png',
+                    imageAlt: 'Custom image',
+                    confirmButtonText: "Share",
+                    inputValidator: function (value) {
+                        return new Promise(function (resolve, reject) {
+                        if (value !== '') {
+                            resolve();
+                        } else {
+                            Swal.fire({
+                                type: 'error',
+                                title: 'No user selected',
+                            })
+                        }
+                        });
+                    }
+                    }).then(function (result) {
+                        if (result.value) {
+                            var user_toshare = result.value;
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    action:"set_userToShare",
+                                    user_toshare: user_toshare,
+                                    id_file: id_file
+                                },
+                                url: "./modules/files/ajax_handle_files.php",
+                                async: false,
+                                success: function(data) {
+                                    var response = jQuery.parseJSON(data);
+                                    if(response.is_status==200){
+                                        Swal.fire({
+                                            type: 'success',
+                                            title: 'File/Folder successfully shared !',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        })
+                                    }else{
+                                        Swal.fire({
+                                            type: 'error',
+                                            title: response.comment,
+                                        })
+                                    }
+                                }
+                            });
+                        }
+                    });
             }
             
             function open_file(id,mime_type,path_file){

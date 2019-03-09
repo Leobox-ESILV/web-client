@@ -17,9 +17,6 @@ class ControleurFiles extends ControleurGenerique {
 		$result = $this->modele->get_create_folder($name_folder);
 		if($result->is_status==200){
 			unset($_SESSION['list_dir']);
-			$_SESSION['quota'] = $this->modele->formatBytes($result->quota,'MB');
-			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space);
-			$_SESSION['percent_used'] = ($result->used_space/$result->quota)*100;
 			$_SESSION['dir_count'] = $result->dir_count;
 		}
 		return $result;
@@ -34,6 +31,7 @@ class ControleurFiles extends ControleurGenerique {
 			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space);
 			$_SESSION['percent_used'] = ($result->used_space/$result->quota)*100;
 			$_SESSION['file_count'] = $result->file_count;
+			$_SESSION['dir_count'] = $result->dir_count;
 		}
 		return $result;
 	}
@@ -63,6 +61,27 @@ class ControleurFiles extends ControleurGenerique {
 		if($result->is_status==200){
 			unset($_SESSION['list_dir']);
 		}
+		return $result;
+	}
+
+	function delete($id_file){
+		$this->modele = new ModeleFiles();
+		$result = $this->modele->get_delete($id_file);
+		if($result->is_status==200){
+			unset($_SESSION['list_dir']);
+		}
+		return $result;
+	}
+
+	function getuserToShare(){
+		$this->modele = new ModeleFiles();
+		$result = $this->modele->get_userToShare();
+		return $result;
+	}
+
+	function setuserToShare($id_file,$user_toshare){
+		$this->modele = new ModeleFiles();
+		$result = $this->modele->set_userToShare($id_file,$user_toshare);
 		return $result;
 	}
 
