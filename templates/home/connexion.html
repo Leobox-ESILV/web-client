@@ -33,13 +33,13 @@
                         <img src="assets/img/logo.png" alt="logo">
                     </a>
                 </div>
-                <h3>Sign in</h3>
+                <h3>Sign In</h3>
                 <form id="formConnexion" role="form" method="POST" action="index.php?module=connexion&action=connexion">
                     <div class="group material-input">
-                        <input name="email" type="text" required>
+                        <input name="username" type="text" required>
                         <span class="highlight"></span>
                         <span class="bar"></span>
-                        <label>E-mail</label>
+                        <label>Username</label>
                     </div>
                     <div class="group material-input">
                         <input name="motdepasse" type="password" required>
@@ -48,24 +48,18 @@
                         <label>Password</label>
                     </div>
                     <div class="row">
-                        <div class="col text-left">
-                            <div class="styled-checkbox">
-                                <input type="checkbox" name="checkbox" id="remeber">
-                                <label for="remeber">Remember me</label>
-                            </div>
-                        </div>
                         <div class="col text-right">
                             <a onclick="setForm('motdepasseoublie');">Forgot your password ?</a>
                         </div>
                     </div>
                     <div class="sign-btn text-center">
-                        <a href="javascript:{}" onclick="document.getElementById('formConnexion').submit()" class="btn btn-lg btn-gradient-01">
-                            Login
+                        <a href="javascript:{}" onclick="connexion()" class="btn btn-lg btn-gradient-01">
+                            Sign In
                         </a>
                     </div>
                 </form>
                 <div class="register">
-                    No account yet ?
+                    Don't have an account ?
                     <br>
                     <a onclick="setForm('inscription');">Create an account</a>
                 </div>

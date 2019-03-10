@@ -34,36 +34,42 @@
                     </a>
                 </div>
                 <h3>Create an account</h3>
-                <form>
+                <form id="formeCreateAccount">
                     <div class="group material-input">
-                        <input type="text" required>
+                        <input name="username" type="text" required>
+                        <span class="highlight"></span>
+                        <span class="bar"></span>
+                        <label>Username</label>
+                    </div>
+                    <div class="group material-input">
+                        <input name="email" type="text" required>
                         <span class="highlight"></span>
                         <span class="bar"></span>
                         <label>E-mail</label>
                     </div>
                     <div class="group material-input">
-                        <input type="password" required>
+                        <input name="password" type="password" required>
                         <span class="highlight"></span>
                         <span class="bar"></span>
                         <label>Password</label>
                     </div>
                     <div class="group material-input">
-                        <input type="password" required>
+                        <input name="confirmPassword" type="password" required>
                         <span class="highlight"></span>
                         <span class="bar"></span>
                         <label>Password confirmation</label>
                     </div>
-                </form>
                 <div class="row">
                     <div class="col text-left">
                         <div class="styled-checkbox">
                             <input type="checkbox" name="checkbox" id="agree">
-                            <label for="agree">I Agree <a href="#">the conditions of use of Leobox.</a></label>
+                            <label for="agree">I Agree <a href="#">the conditions to use leobox.</a></label>
                         </div>
                     </div>
                 </div>
+                </form>
                 <div class="sign-btn text-center">
-                    <a href="db-default.html" class="btn btn-lg btn-gradient-01">
+                    <a href="javascript:{}" onclick="createaccount()" class="btn btn-lg btn-gradient-01">
                         Create my account
                     </a>
                 </div>

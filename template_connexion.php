@@ -45,8 +45,95 @@
 		            $("#preloader").delay(350).fadeOut("slow");
                 });
 			}
-			
 			setForm('connexion');
+
+			function loader_call(){
+				window.Swal.fire({
+					title: "Checking...",
+					text: "Please wait",
+					imageUrl: "https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif",
+					showConfirmButton: false,
+					allowOutsideClick: false
+				});
+			}
+
+			function connexion(){
+				var username = $('#formConnexion').find('input[name="username"]').val();
+				var password = $('#formConnexion').find('input[name="motdepasse"]').val();
+				loader_call();
+				$.ajax({
+                    type: "POST",
+                    data: {
+                        action:"connexion",
+						username: username,
+						password: password
+                    },
+                    url: "./modules/connexion/ajax_handle_connexion.php",
+                    success: function(data) {
+						var response = jQuery.parseJSON(data);
+                        if(response.is_status==200){
+							window.location.replace("index.php?module=files");
+						}else{
+							Swal.fire({
+								type: 'error',
+								title: response.comment,
+							})
+						}
+                    }
+                });
+			}
+
+			function createaccount(){
+				var username = $('#formeCreateAccount').find('input[name="username"]').val();
+				var email = $('#formeCreateAccount').find('input[name="email"]').val();
+				var password = $('#formeCreateAccount').find('input[name="password"]').val();
+				var confirmPassword = $('#formeCreateAccount').find('input[name="confirmPassword"]').val();
+				var checkbox = $('#formeCreateAccount').find('input[name="checkbox"]').is(":checked");
+				if(password!=confirmPassword){
+					Swal.fire({
+						type: 'error',
+						title: 'The passwords entered are different',
+					})
+					return false;
+				}
+				if(checkbox==false){
+					Swal.fire({
+						type: 'error',
+						title: 'Please check "I Agree the conditions to use leobox."',
+					})
+					return false;
+				}
+				loader_call();
+				$.ajax({
+                    type: "POST",
+                    data: {
+                        action:"createaccount",
+						email: email,
+						username: username,
+						password: password
+                    },
+                    url: "./modules/connexion/ajax_handle_connexion.php",
+                    success: function(data) {
+						var response = jQuery.parseJSON(data);
+                        if(response.is_status==200){
+							Swal.fire({
+								type: 'success',
+								title: 'Folder successfully create',
+								showConfirmButton: false,
+								timer: 2000
+							})
+							setTimeout(() => {
+								location.reload();
+							}, 2000);
+						}else{
+							Swal.fire({
+								type: 'error',
+								title: response.comment,
+							})
+						}
+                    }
+                });
+			}
 		</script>
     </body>
 </html>

@@ -100,10 +100,10 @@ Author: SAEROX
                                     <li class="separator"></li>
                                     <li>
                                         <a href="pages-faq.html" class="dropdown-item no-padding-top"> 
-                                            Profil
+                                            Profile
                                         </a>
                                     </li>
-                                    <li><a rel="nofollow" href="pages-login.html" class="dropdown-item logout text-center"><i class="ti-power-off"></i></a></li>
+                                    <li><a rel="nofollow" href="index.php?module=connexion&action=logout" class="dropdown-item logout text-center"><i class="ti-power-off"></i></a></li>
                                 </ul>
                             </li>
                             <!-- End User -->

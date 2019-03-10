@@ -206,6 +206,17 @@ class VueFiles extends VueGenerique {
             function _(el) {
                 return document.getElementById(el);
             }
+
+            function loader_call(){
+				window.Swal.fire({
+					title: "Loading...",
+					text: "Please wait",
+					imageUrl: "https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif",
+					showConfirmButton: false,
+					allowOutsideClick: false
+				});
+			}
+
             var percent_used = <?php echo $_SESSION['percent_used'] ?>;
 
             var color_circle = []
@@ -291,6 +302,7 @@ class VueFiles extends VueGenerique {
             }
 
             function click_download_file(path_file,id,mime_type){
+                loader_call();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -298,8 +310,8 @@ class VueFiles extends VueGenerique {
                         id_file:id
                     },
                     url: "./modules/files/ajax_handle_files.php",
-                    async: false,
                     success: function(data) {
+                        Swal.close();
                         var a = document.createElement('a');
                         a.href= "data:application/octet-stream;base64,"+data;
                         a.target = '_blank';
@@ -484,6 +496,7 @@ class VueFiles extends VueGenerique {
             }
             
             function open_file(id,mime_type,path_file){
+                loader_call();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -491,8 +504,8 @@ class VueFiles extends VueGenerique {
                         id_file:id
                     },
                     url: "./modules/files/ajax_handle_files.php",
-                    async: false,
                     success: function(data) {
+                        Swal.close();
                         if(mime_type.includes('image')){
                             var image = new Image();
                             image.src = 'data:'+mime_type+';base64,'+data;

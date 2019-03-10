@@ -1,5 +1,6 @@
-<!DOCTYPE html>
 <?php
+
+require_once (dirname(__FILE__,3)."/include/vue_generique.php");
 
 class VueConnexion extends VueGenerique {
 

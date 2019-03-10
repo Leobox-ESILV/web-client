@@ -1,6 +1,6 @@
 <?php
 
-require_once './modules/connexion/controleur_connexion.php';
+require_once(dirname(__FILE__,3).'/modules/connexion/controleur_connexion.php');
 
 class ModConnexion extends ModuleGenerique {
 
@@ -11,6 +11,9 @@ class ModConnexion extends ModuleGenerique {
 		switch($action) {
 			case "connexion":
 				$this->controleur->connexion();
+			break;
+			case "logout":
+				$this->controleur->logout();
 			break;
 		}
 		$this->controleur->afficheConnexion();

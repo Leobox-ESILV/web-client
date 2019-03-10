@@ -1,23 +1,51 @@
 <?php
 
-require_once('./include/modele_generique.php');
-require_once("./modules/connexion/vue_connexion.php");
-require_once('./vendor/autoload.php');
+require_once(dirname(__FILE__,3).'/include/modele_generique.php');
+require_once(dirname(__FILE__,3)."/modules/connexion/vue_connexion.php");
+require_once(dirname(__FILE__,3).'/vendor/autoload.php');
 
 class ModeleConnexion extends ModeleGenerique {
 
-	function connecter($email,$mdp){
+	function get_connecter($username,$password){
 
-		$this->vue = new VueConnexion();
+		$modeleGene = new ModeleGenerique();
 
-		$client = new GuzzleHttp\Client();
-		$res = $client->request('GET', parent::$url_api.'user/login', [
-			'query' => ['username' => $email, 'password' => $mdp]
-		]);
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('GET', $modeleGene->getUrlApi().'user/login', [
+			'query' => ['username' => $username, 'password' => $password]
+        ]);
+        
 		$result = json_decode($res->getBody());
-		
 		return $result;
-	}
+    }
+    
+    function get_createaccount($email,$username,$password){
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('POST', $modeleGene->getUrlApi().'user/create', [
+			'query' => ['username' => $username, 'password' => $password, 'email'=> $email]
+        ]);
+        
+		$result = json_decode($res->getBody());
+		return $result;
+    }
+
+    function get_logout(){
+        $user_token = $_SESSION['user_token'];
+        $username = $_SESSION['display_name'];
+        $modeleGene = new ModeleGenerique();
+
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('GET', $modeleGene->getUrlApi()."user/".$username."/logout", [
+            'headers' => [
+                'ApiKeyUser' => $user_token
+            ]
+        ]);
+        $result = json_decode($res->getBody());
+        return $result;
+    }
+
 
 	function formatBytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
     {
