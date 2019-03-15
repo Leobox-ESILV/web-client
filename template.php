@@ -98,11 +98,11 @@ Author: SAEROX
                                         </a>
                                     </li>
                                     <li class="separator"></li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="pages-faq.html" class="dropdown-item no-padding-top"> 
                                             Profile
                                         </a>
-                                    </li>
+                                    </li> -->
                                     <li><a rel="nofollow" href="index.php?module=connexion&action=logout" class="dropdown-item logout text-center"><i class="ti-power-off"></i></a></li>
                                 </ul>
                             </li>
@@ -123,8 +123,8 @@ Author: SAEROX
                         </br>
                         <span class="heading">My Leobox</span>
                         <ul class="list-unstyled">
-                            <li class="active"><a href="index.php?module=files"><i class="ti ti-folder"></i><span>My Files</span></a></li>
-                            <li><a href="#"><i class="ti ti-sharethis"></i><span>Shared</span></a></li>
+                            <li id="files"><a href="index.php?module=files"><i class="ti ti-folder"></i><span>My Files</span></a></li>
+                            <li id="sharedme"><a href="index.php?module=sharedme"><i class="ti ti-sharethis"></i><span>Shared with me</span></a></li>
                         </ul>
                         <span class="heading">My addons</span>
                         <ul class="list-unstyled">
@@ -204,6 +204,20 @@ Author: SAEROX
         <script src="http://danml.com/js/download2.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.3.2/viewer.min.js"></script>
         <script src="assets/img-viewer/jquery-viewer.min.js"></script>
+        <script>
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        var modules = getParameterByName('module');
+        $("#"+modules).addClass("active");
+        </script>
         <!-- End Page Snippets -->
     </body>
 </html>

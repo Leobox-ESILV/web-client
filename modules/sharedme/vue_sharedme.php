@@ -1,9 +1,9 @@
 <?php
 
-require_once (dirname(__FILE__,3)."/modules/files/modele_files.php");
+require_once (dirname(__FILE__,3)."/modules/sharedme/modele_sharedme.php");
 require_once (dirname(__FILE__,3)."/include/vue_generique.php");
 
-class VueFiles extends VueGenerique {
+class VueSharedme extends VueGenerique {
 
     public function __construct() {
         parent::__construct();
@@ -11,13 +11,13 @@ class VueFiles extends VueGenerique {
     }
 
 
-    public function vue_files($listFiles){
+    public function vue_sharedme($listFiles,$home_user){
     	?>
         <!-- Begin Page Header-->
         <div class="row">
             <div class="page-header">
                 <div class="d-flex align-items-center">
-                    <h2 class="page-header-title">My Files</h2>
+                    <h2 class="page-header-title">Shared Files with me</h2>
                     <div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item active"><i class="ti ti-home"></i></li>
@@ -31,104 +31,94 @@ class VueFiles extends VueGenerique {
         <!-- End Page Header -->
         <!-- Begin Row -->
         <div class="row flex-row">
-            <!-- Begin Widget 16 -->
-            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                <div class="widget widget-16" style="background:transparent">
-                    <div>
-                        <div class="row">
-                            <div class="col-xl-8 d-flex flex-column justify-content-center align-items-center">
-                                <div class="counter"><?php echo $_SESSION['used_space']; ?></div>
-                                <div class="total-views">Used space (Total space : <?php echo $_SESSION['quota']; ?>)</div>
-                            </div>
-                            <div class="col-xl-4 d-flex justify-content-center align-items-center">
-                                <div class="pages-views" id="circle_used_space">
-                                    <div class="percent"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Widget 16 -->
-            <!-- Begin Widget 17 -->
-            <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="widget widget-12 has-shadow">
-                    <div class="widget-body">
-                        <div class="media">
-                            <div class="align-self-center ml-5 mr-5">
-                                <i class="ti ti-folder"></i>
-                            </div>
-                            <div class="media-body align-self-center">
-                                <div class="title"><?php echo $_SESSION['dir_count'] ?></div>
-                                <div class="number">Folder(s)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-md-6 col-sm-6">
-                <div class="widget widget-12 has-shadow">
-                    <div class="widget-body">
-                        <div class="media">
-                            <div class="align-self-center ml-5 mr-5">
-                                <i class="ti ti-files"></i>
-                            </div>
-                            <div class="media-body align-self-center">
-                                <div class="title"><?php echo $_SESSION['file_count'] ?></div>
-                                <div class="number">File(s)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Widget 17 -->
-        </div>
-        <!-- End Row -->
-        <!-- Begin Row -->
-        <div class="row flex-row">
             <!-- Begin Widget 20 -->
             <div class="col-xl-12">
                 <!-- Begin Widget Header -->
                 <div class="widget has-shadow">
+                    <?php
+                    if(isset($_GET['open'])){
+                        if(!empty($listFiles[0]['path'])){
+                            $last_space_position = strrpos($listFiles[0]['path'], '/');
+                            $_SESSION['current_pos_shared'] = substr($listFiles[0]['path'], 0, $last_space_position);
+                        }
+                    }else{
+                        unset($_SESSION['current_pos_shared']);
+                    }
+                    ?>
                     <div class="widget-header bordered no-actions d-flex align-items-center">
-                        <h4>Leobox <?php if(strlen($_SESSION['current_path_file'])>=2){ echo "> ".str_replace('/',' > ',$_SESSION['current_path_file']); } ?></h4>
+                        <h4>Shared <?php if(isset($_SESSION['current_pos_shared']) && strlen($_SESSION['current_pos_shared'])>=2){ echo "> ".str_replace('/',' > ',$_SESSION['current_pos_shared']); } ?></h4>
                     </div>
                     <div class="widget-body">
-                        <form id="upload_form" enctype="multipart/form-data" method="post">
-                            <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
-                            
-                            <button type="button" value="Upload File" onclick="document.getElementById('file1').click()" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-file"></i> Upload File</button>
-                            <input type="file" style="display:none" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
-                            
-                            <button type="button" value="Upload Folder" onclick="document.getElementById('folder1').click()" class="btn btn-gradient-04 mr-1 mb-2"><i class="la la-folder-open"></i> Upload Folder</button>
-                            <input type="file" style="display:none" name="files[]" id="folder1" multiple="" directory="" webkitdirectory="" mozdirectory="">
-                            
-                            <div id="upload_file_name" style="display:none" class="alert alert-outline-primary dotted" role="alert">
-                                <strong></strong> wait uploading......
-                            </div>
-                            <div class="progress progress-lg mb-3" id="div_upload_bar" style="display:none">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="upload_bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
-                            </div>
-                            <p id="loaded_n_total"></p>
-                        </form>
                         <?php
-                        if (empty($listFiles['sub_dir'])) {
+                        if ($home_user==true) {
                         ?>
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                                <div class="widget widget-17 has-shadow">
-                                    <div class="widget-body">
-                                        <div class="row">
-                                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center">
-                                                <div class="counter">You have nothing yet in this space</div>
-                                                <div class="total-visitors">Use the buttons above to create folder or upload file</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="table-responsive">
+                                <table id="files-table" class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th><i style="font-size:1.1rem;margin-right:5px;color:#98a8b4;" class="la la-share-alt"></i>List of users sharing</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php 
+                                        $this->modele = new ModeleSharedme();
+                                        foreach ($listFiles as $info) {
+                                        ?>
+                                        <tr class="table_files" onclick="click_on_user('<?php echo $info[1]; ?>','<?php echo $info[0]; ?>')">
+                                            <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type('directory'); ?>"></i><span class="text-primary">Shared by <strong><?php echo $info[0]; ?></strong></span></td>
+                                        </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>List of users sharing</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         <?php
                         }else{
                         ?>
+                            <?php
+                            if(isset($_GET['open'])){
+                            ?>
+                                <form id="upload_form" enctype="multipart/form-data" method="post">
+                                    <button type="button" onclick="create_folder()" class="btn btn-gradient-03 mr-1 mb-2"><i class="la la-plus-circle"></i> Create Folder</button>
+                                    
+                                    <button type="button" value="Upload File" onclick="document.getElementById('file1').click()" class="btn btn-gradient-05 mr-1 mb-2"><i class="la la-file"></i> Upload File</button>
+                                    <input type="file" style="display:none" name="file1" id="file1" class="btn btn-gradient-05 mr-1 mb-2">
+                                    
+                                    <div id="upload_file_name" style="display:none" class="alert alert-outline-primary dotted" role="alert">
+                                        <strong></strong> wait uploading......
+                                    </div>
+                                    <div class="progress progress-lg mb-3" id="div_upload_bar" style="display:none">
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="upload_bar" role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                    </div>
+                                    <p id="loaded_n_total"></p>
+                                </form>
+                            <?php
+                            }
+                            ?>
+                            <?php
+                            if(empty($listFiles[0]['path'])){
+                            ?>
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                    <div class="widget widget-17 has-shadow">
+                                        <div class="widget-body">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center">
+                                                    <div class="counter">You have nothing yet in this space</div>
+                                                    <div class="total-visitors">Use the buttons above to create folder or upload file</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php
+                            }else{
+                            ?>
                             <div class="table-responsive">
                                 <table id="files-table" class="table table-hover mb-0">
                                     <thead>
@@ -142,31 +132,35 @@ class VueFiles extends VueGenerique {
                                     </thead>
                                     <tbody>
                                         <?php 
-                                        $this->modele = new ModeleFiles();
-                                        foreach ($listFiles['sub_dir'] as $info) {
+                                        $this->modele = new ModeleSharedme();
+                                        foreach ($listFiles as $info) {
+                                            $id_file = $info['id'];
+                                            if(isset($info['uid_file'])){
+                                                $id_file = $info['uid_file'];
+                                            }
                                         ?>
-                                        <tr class="table_files" onclick="click_on_row('<?php echo $info['path_file']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')">
-                                            <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php echo $info['name']; ?></span></td>
+                                        <tr class="table_files" onclick="click_on_row('<?php echo $info['path']; ?>','<?php echo $id_file; ?>','<?php echo $info['mime_type']; ?>')">
+                                            <td><i style="font-size:2.5rem;margin-right:5px;color:#242c31;" class="la <?php echo $this->modele->set_mime_type($info['mime_type']); ?>"></i><span class="text-primary"><?php $var = explode('/',$info['path']); echo end($var); ?></span></td>
                                             <td><?php echo $this->modele->formatBytes($info['size']); ?></td>
-                                            <td><?php echo explode(',',$info['type'])[0]; ?></td>
+                                            <td><?php echo explode(',',$info['name'])[0]; ?></td>
                                             <td><?php echo date('d/m/Y H:i', $info['storage_mtime']); ?></td>
                                             <td id="td_actions">
                                                 <div class="btn-group">
-                                                    <button type="button" onclick="click_shared('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')" class="btn btn-secondary"><i class="la la-share"></i>Share</button>
-                                                    <a class="btn btn-secondary dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <button type="button" onclick="click_shared('<?php echo $id_file; ?>','<?php echo $info['path']; ?>')" class="btn btn-primary"><i class="la la-calendar-times-o"></i>Revoke access</button>
+                                                    <a class="btn btn-primary dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="la la-angle-down mr-0"></i>
                                                     </a>
                                                     <div class="dropdown-menu">
                                                     <?php 
                                                     if(!strstr($info['mime_type'],'directory')){
                                                     ?>
-                                                        <a class="dropdown-item" onclick="click_download_file('<?php echo $info['path_file']; ?>','<?php echo $info['id']; ?>','<?php echo $info['mime_type']; ?>')"><i class="la la-download"></i> Download</a>
+                                                        <a class="dropdown-item" onclick="click_download_file('<?php echo $info['path']; ?>','<?php echo $id_file; ?>','<?php echo $info['mime_type']; ?>')"><i class="la la-download"></i> Download</a>
                                                     <?php 
                                                     }
                                                     ?>
-                                                        <a class="dropdown-item" onclick="click_rename('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')"><i class="la la-wrench"></i> Rename</a>
+                                                        <a class="dropdown-item" onclick="click_rename('<?php echo $id_file; ?>','<?php echo $info['path']; ?>')"><i class="la la-wrench"></i> Rename</a>
                                                         <div class="dropdown-divider"></div>
-                                                        <a class="dropdown-item" onclick="click_delete('<?php echo $info['id']; ?>','<?php echo $info['name']; ?>')"><i class="la la-remove"></i> Delete</a>
+                                                        <a class="dropdown-item" onclick="click_delete('<?php echo $id_file; ?>','<?php echo $info['path']; ?>')"><i class="la la-remove"></i> Delete</a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -187,6 +181,7 @@ class VueFiles extends VueGenerique {
                                 </table>
                             </div>
                         <?php
+                            }
                         }
                         ?>
                     </div>
@@ -205,6 +200,39 @@ class VueFiles extends VueGenerique {
 
             function _(el) {
                 return document.getElementById(el);
+            }
+
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            function setCookie(name,value,days) {
+                var expires = "";
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days*24*60*60*1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+            }
+            function getCookie(name) {
+                var nameEQ = name + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0;i < ca.length;i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+                }
+                return null;
+            }
+            function eraseCookie(name) {   
+                document.cookie = name+'=; Max-Age=-99999999;';  
             }
 
             function loader_call(){
@@ -283,13 +311,26 @@ class VueFiles extends VueGenerique {
                     SIZE_LISTFILES = folder.length-1;
                     uploadFolder(0);
                 });
+
+                if(getParameterByName('user') !== null){
+                    $('.page-header-title').append(' by '+getCookie('user_shared')+'')
+                }
             });
+
+            function click_on_user(id,name_shared){
+                setCookie('user_shared',name_shared,7);
+                window.open("index.php?module=sharedme&user="+id,"_self");
+            }
 
             function click_on_row(path_file,id,mime_type){
                 closet_click_td = $(event.target).closest('td').attr('id');
                 if(closet_click_td!="td_actions"){
                     if(mime_type.includes('directory')){
-                        window.open("index.php?module=files&open="+path_file,"_self");
+                        var current_url = window.location.href;
+                        if(current_url.includes('open')){ 
+                            current_url = current_url.substring(0, current_url.lastIndexOf("&"));
+                        }
+                        window.open(current_url+"&open="+id,"_self");
                     }else if(mime_type.includes('image') || mime_type.includes('text') || mime_type.includes('pdf')){
                         open_file(id,mime_type,path_file)
                     }else{
@@ -309,7 +350,7 @@ class VueFiles extends VueGenerique {
                         action:"openDownload_file",
                         id_file:id
                     },
-                    url: "./modules/files/ajax_handle_files.php",
+                    url: "./modules/sharedme/ajax_handle_sharedme.php",
                     success: function(data) {
                         Swal.close();
                         var a = document.createElement('a');
@@ -349,7 +390,7 @@ class VueFiles extends VueGenerique {
                                     id_file:id_file,
                                     new_name:new_name
                                 },
-                                url: "./modules/files/ajax_handle_files.php",
+                                url: "./modules/sharedme/ajax_handle_sharedme.php",
                                 async: false,
                                 success: function(data) {
                                     var response = jQuery.parseJSON(data);
@@ -392,7 +433,7 @@ class VueFiles extends VueGenerique {
                                     action:"delete",
                                     id_file:id_file
                                 },
-                                url: "./modules/files/ajax_handle_files.php",
+                                url: "./modules/sharedme/ajax_handle_sharedme.php",
                                 async: false,
                                 success: function(data) {
                                     var response = jQuery.parseJSON(data);
@@ -428,7 +469,7 @@ class VueFiles extends VueGenerique {
                     data: {
                         action:"get_userToShare"
                     },
-                    url: "./modules/files/ajax_handle_files.php",
+                    url: "./modules/sharedme/ajax_handle_sharedme.php",
                     async: false,
                     success: function(data) {
                         var response = jQuery.parseJSON(data);
@@ -472,7 +513,7 @@ class VueFiles extends VueGenerique {
                                     user_toshare: user_toshare,
                                     id_file: id_file
                                 },
-                                url: "./modules/files/ajax_handle_files.php",
+                                url: "./modules/sharedme/ajax_handle_sharedme.php",
                                 async: false,
                                 success: function(data) {
                                     var response = jQuery.parseJSON(data);
@@ -503,7 +544,7 @@ class VueFiles extends VueGenerique {
                         action:"openDownload_file",
                         id_file:id
                     },
-                    url: "./modules/files/ajax_handle_files.php",
+                    url: "./modules/sharedme/ajax_handle_sharedme.php",
                     success: function(data) {
                         Swal.close();
                         if(mime_type.includes('image')){
@@ -522,10 +563,10 @@ class VueFiles extends VueGenerique {
             
             function create_folder(){
                 var nameFolder = ""
+                var id_parent = getParameterByName('open');
                 Swal.fire({
                     title: 'Create Folder',
-                    html: '<p>Enter the name of the folder you want to create :</p>\n'+
-                    '<p style="font-size:1rem;color:#98a8b4;">If you want to create directories recursively: folder1/folder2/...</p>',
+                    html: '<p>Enter the name of the folder you want to create :</p>',
                     input: 'text',
                     inputAttributes: {
                         autocapitalize: 'off'
@@ -542,9 +583,10 @@ class VueFiles extends VueGenerique {
                                 type: "POST",
                                 data: {
                                     action:"create_folder",
-                                    name_folder:result.value
+                                    name_folder:result.value,
+                                    id_parent:id_parent
                                 },
-                                url: "./modules/files/ajax_handle_files.php",
+                                url: "./modules/sharedme/ajax_handle_sharedme.php",
                                 async: false,
                                 success: function(data) {
                                     var response = jQuery.parseJSON(data);
@@ -588,7 +630,7 @@ class VueFiles extends VueGenerique {
                 ajax.addEventListener("load", completeHandler, false);
                 ajax.addEventListener("error", errorHandler, false);
                 ajax.addEventListener("abort", abortHandler, false);
-                ajax.open("POST", "./modules/files/ajax_handle_files.php");
+                ajax.open("POST", "./modules/sharedme/ajax_handle_sharedme.php");
                 ajax.send(formdata);
             }
 
@@ -596,6 +638,7 @@ class VueFiles extends VueGenerique {
                 var file = _("file1").files[0];
                 var formdata = new FormData();
                 formdata.append("file1", file);
+                formdata.append("id_parent", getParameterByName('open'));
                 formdata.append("action", "upload_file");
                 var ajax = new XMLHttpRequest();
                 $('#div_upload_bar').css("display", "block");
@@ -606,7 +649,7 @@ class VueFiles extends VueGenerique {
                 ajax.addEventListener("load", completeHandler, false);
                 ajax.addEventListener("error", errorHandler, false);
                 ajax.addEventListener("abort", abortHandler, false);
-                ajax.open("POST", "./modules/files/ajax_handle_files.php");
+                ajax.open("POST", "./modules/sharedme/ajax_handle_sharedme.php");
                 ajax.send(formdata);
             }
 

@@ -28,6 +28,7 @@ date_default_timezone_set('Europe/Paris');
 
 	switch ($nom_module) {
 		case "files":
+		case "sharedme":
 		case "connexion":
 			break;
 	    default :
