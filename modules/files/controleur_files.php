@@ -16,7 +16,6 @@ class ControleurFiles extends ControleurGenerique {
 		$this->modele = new ModeleFiles();
 		$result = $this->modele->get_create_folder($name_folder);
 		if($result->is_status==200){
-			unset($_SESSION['list_dir']);
 			$_SESSION['dir_count'] = $result->dir_count;
 		}
 		return $result;
@@ -26,7 +25,6 @@ class ControleurFiles extends ControleurGenerique {
 		$this->modele = new ModeleFiles();
 		$result = $this->modele->get_upload_file($file);
 		if($result->is_status==200){
-			unset($_SESSION['list_dir']);
 			$_SESSION['quota'] = $this->modele->formatBytes($result->quota,'MB');
 			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space);
 			$_SESSION['percent_used'] = ($result->used_space/$result->quota)*100;
@@ -40,7 +38,6 @@ class ControleurFiles extends ControleurGenerique {
 		$this->modele = new ModeleFiles();
 		$result = $this->modele->get_upload_folder($file,$folder_source);
 		if($result->is_status==200){
-			unset($_SESSION['list_dir']);
 			$_SESSION['quota'] = $this->modele->formatBytes($result->quota,'MB');
 			$_SESSION['used_space'] = $this->modele->formatBytes($result->used_space);
 			$_SESSION['percent_used'] = ($result->used_space/$result->quota)*100;
@@ -58,18 +55,12 @@ class ControleurFiles extends ControleurGenerique {
 	function rename($id_file,$new_name){
 		$this->modele = new ModeleFiles();
 		$result = $this->modele->get_rename($id_file,$new_name);
-		if($result->is_status==200){
-			unset($_SESSION['list_dir']);
-		}
 		return $result;
 	}
 
 	function delete($id_file){
 		$this->modele = new ModeleFiles();
 		$result = $this->modele->get_delete($id_file);
-		if($result->is_status==200){
-			unset($_SESSION['list_dir']);
-		}
 		return $result;
 	}
 

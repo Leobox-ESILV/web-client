@@ -13,21 +13,15 @@ class ModFiles extends ModuleGenerique {
         $this->vue = new VueFiles();
         $this->modele = new ModeleFiles();
 
-        if(!isset($_SESSION['list_dir'])){
-            $_SESSION['list_dir'] = $this->modele->get_list_files();
-        }
-
-        /* echo "<pre>";
-        print_r($list_dir);
-        echo "</pre>"; */
-   
+        $list_dir_array = $this->modele->get_list_files();
+        
         if(isset($_GET['open'])){
             $_SESSION['current_path_file'] = $_GET['open'];
-            $new_list_dir = $this->modele->find_path_tree($_GET['open'],$_SESSION['list_dir']);
+            $new_list_dir = $this->modele->find_path_tree($_GET['open'],$list_dir_array);
             $this->controleur->affiche_files($new_list_dir);
         }else{
             $_SESSION['current_path_file'] = "/";
-            $this->controleur->affiche_files($_SESSION['list_dir']);
+            $this->controleur->affiche_files($list_dir_array);
         }
     }
 
