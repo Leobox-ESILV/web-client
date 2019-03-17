@@ -35,6 +35,33 @@ Author: SAEROX
         <link rel="stylesheet" href="assets/css/datatables/datatables.min.css">
         <link rel="stylesheet" href="assets/sweetalert2/sweetalert2.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.3.2/viewer.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+        <style>
+        #jstree_filebrowser .folder { background:url('assets/img/file_sprite.png') right bottom no-repeat; }
+		#jstree_filebrowser .file { background:url('assets/img/file_sprite.png') 0 0 no-repeat; }
+		#jstree_filebrowser .file-pdf { background-position: -32px 0 }
+		#jstree_filebrowser .file-as { background-position: -36px 0 }
+		#jstree_filebrowser .file-c { background-position: -72px -0px }
+		#jstree_filebrowser .file-iso { background-position: -108px -0px }
+		#jstree_filebrowser .file-htm, #jstree_filebrowser .file-html, #jstree_filebrowser .file-xml, #jstree_filebrowser .file-xsl { background-position: -126px -0px }
+		#jstree_filebrowser .file-cf { background-position: -162px -0px }
+		#jstree_filebrowser .file-cpp { background-position: -216px -0px }
+		#jstree_filebrowser .file-cs { background-position: -236px -0px }
+		#jstree_filebrowser .file-sql { background-position: -272px -0px }
+		#jstree_filebrowser .file-xls, #jstree_filebrowser .file-xlsx { background-position: -362px -0px }
+		#jstree_filebrowser .file-h { background-position: -488px -0px }
+		#jstree_filebrowser .file-crt, #jstree_filebrowser .file-pem, #jstree_filebrowser .file-cer { background-position: -452px -18px }
+		#jstree_filebrowser .file-php { background-position: -108px -18px }
+		#jstree_filebrowser .file-jpg, #jstree_filebrowser .file-jpeg, #jstree_filebrowser .file-png, #jstree_filebrowser .file-gif, #jstree_filebrowser .file-bmp { background-position: -126px -18px }
+		#jstree_filebrowser .file-ppt, #jstree_filebrowser .file-pptx { background-position: -144px -18px }
+		#jstree_filebrowser .file-rb { background-position: -180px -18px }
+		#jstree_filebrowser .file-text, #jstree_filebrowser .file-txt, #jstree_filebrowser .file-md, #jstree_filebrowser .file-log, #jstree_filebrowser .file-htaccess { background-position: -254px -18px }
+		#jstree_filebrowser .file-doc, #jstree_filebrowser .file-docx { background-position: -362px -18px }
+		#jstree_filebrowser .file-zip, #jstree_filebrowser .file-gz, #jstree_filebrowser .file-tar, #jstree_filebrowser .file-rar { background-position: -416px -18px }
+		#jstree_filebrowser .file-js { background-position: -434px -18px }
+		#jstree_filebrowser .file-css { background-position: -144px -0px }
+		#jstree_filebrowser .file-fla { background-position: -398px -0px }
+        </style>
         <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
@@ -128,7 +155,7 @@ Author: SAEROX
                         </ul>
                         <span class="heading">My addons</span>
                         <ul class="list-unstyled">
-                            <li><a href="#"><i class="ti ti-bar-chart"></i><span>My View</span></a></li>
+                            <li id="myview"><a href="index.php?module=myview"><i class="ti ti-bar-chart"></i><span>My View</span></a></li>
                         </ul>
                     </nav>
                     <!-- End Side Navbar -->
