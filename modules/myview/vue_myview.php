@@ -45,7 +45,7 @@ class VueMyview extends VueGenerique {
                     <!-- Begin Widget Body -->
                     <div class="widget-body">
                         <div class="row">
-                            <div class="col-xl-12 col-12">
+                            <div class="col-xl-12 col-10">
                                 <div>
                                     <div id="jstree_filebrowser"></div>
                                 </div>
@@ -78,8 +78,8 @@ class VueMyview extends VueGenerique {
                     'force_text' : true,
                     'themes' : {
                         'responsive' : false,
-                        'variant' : 'small',
-                        'stripes' : true
+                        'variant' : 'large'
+                        /* 'stripes' : true */
                     }
                 }
             });

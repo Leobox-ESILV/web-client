@@ -21,8 +21,8 @@ class ModeleMyview extends ModeleGenerique {
             }else{
                 if($key == 'type' && $val != 'Folder'){
                     $type_file = explode(".", $arr['text']);
-                    if(isset($type_file[1])){
-                        $arr[$key] = 'file file-'.$type_file[1];
+                    if(count($type_file)>=2){
+                        $arr[$key] = 'file file-'.end($type_file);
                     }else{
                         $arr[$key] = 'file file';
                     }
