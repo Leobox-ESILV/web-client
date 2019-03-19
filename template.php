@@ -61,6 +61,26 @@ Author: SAEROX
 		#jstree_filebrowser .file-js { background:url('assets/icons/filebrowser/187_Js_logo_logos-256.png') center no-repeat; background-size: 28px 28px; }
 		#jstree_filebrowser .file-css { background:url('assets/icons/filebrowser/css-256.png') center no-repeat; background-size: 28px 28px; }
 		#jstree_filebrowser .file-fla { background-position: -398px -0px }
+        .node {
+		cursor: pointer;
+        }
+
+        .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+        }
+
+        .node text {
+        font: 14px sans-serif;
+        font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+        font-weight: bold;
+        }
+
+        .link {
+        fill: none;
+        stroke-width: 3px;
+        }
         </style>
         <!-- Tweaks for older IEs--><!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -155,7 +175,8 @@ Author: SAEROX
                         </ul>
                         <span class="heading">My addons</span>
                         <ul class="list-unstyled">
-                            <li id="myview"><a href="index.php?module=myview"><i class="ti ti-bar-chart"></i><span>My View</span></a></li>
+                            <li id="myview"><a href="index.php?module=myview"><i class="la la-tree"></i><span>My Tree View</span></a></li>
+                            <li id="mygraph"><a href="index.php?module=mygraph"><i class="ti ti-bar-chart-alt"></i><span>My Graph View</span></a></li>
                         </ul>
                     </nav>
                     <!-- End Side Navbar -->

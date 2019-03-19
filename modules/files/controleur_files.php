@@ -6,7 +6,7 @@ require_once (dirname(__FILE__,3)."/include/controleur_generique.php");
 
 class ControleurFiles extends ControleurGenerique {
 
-	 function affiche_files($list_dir) {
+	function affiche_files($list_dir) {
 		$this->vue = new VueFiles();
 		$this->modele = new ModeleFiles();
 		$this->vue->vue_files($list_dir);

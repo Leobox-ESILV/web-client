@@ -71,9 +71,10 @@ class ModeleFiles extends ModeleGenerique {
 	function get_list_files(){
         $user_token = $_SESSION['user_token'];
         $username = $_SESSION['display_name'];
-        
+        $modeleGene = new ModeleGenerique();
+
         $client = new GuzzleHttp\Client();
-		$res = $client->request('GET', parent::$url_api."file/".$username, [
+		$res = $client->request('GET', $modeleGene->getUrlApi()."file/".$username, [
 			'headers' => [
                 'ApiKeyUser' => $user_token
             ]

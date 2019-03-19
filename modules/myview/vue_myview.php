@@ -17,12 +17,12 @@ class VueMyview extends VueGenerique {
         <div class="row">
             <div class="page-header">
                 <div class="d-flex align-items-center">
-                    <h2 class="page-header-title">My Folder View Tree</h2>
+                    <h2 class="page-header-title">My Folder Tree View</h2>
                     <div>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item active"><i class="ti ti-home"></i></li>
-                            <li class="breadcrumb-item"><a href="index.php?module=myview">My Files</a></li>
-                            <li class="breadcrumb-item"><a href="index.php?module=sharedme">Shared with me</a></li>
+                            <li class="breadcrumb-item"><a href="index.php?module=myview">My Tree View</a></li>
+                            <li class="breadcrumb-item"><a href="index.php?module=mygraph">My Graph View</a></li>
                         </ul>
                     </div>
                 </div>

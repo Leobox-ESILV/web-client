@@ -14,7 +14,6 @@ class ControleurMyview extends ControleurGenerique {
 	function json_list_myview(){
 		$this->modele = new ModeleMyview();
 		$list_dir_array = $this->modele->get_list_myview();
-		/* echo '<pre>'; print_r($list_dir_array); echo '</pre>'; */
 		return $list_dir_array;
 	}
 	
